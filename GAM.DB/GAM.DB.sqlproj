@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>GAM.DB</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{2f5fbd82-3347-44f9-bde7-79f963ea62c7}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>GAM.DB</RootNamespace>
+    <AssemblyName>GAM.DB</AssemblyName>
+    <ModelCollation>3082,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>Modern_Spanish_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Views\" />
+    <Folder Include="Security\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="dbo\Synonyms\" />
+    <Folder Include="Storage\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\ClassSubClassEtiquetas.sql" />
+    <Build Include="dbo\Tables\ContactosPuesto.sql" />
+    <Build Include="dbo\Tables\ContactosDepartamento.sql" />
+    <Build Include="dbo\Tables\ContactosDetalle.sql" />
+    <Build Include="dbo\Tables\Rubros.sql" />
+    <Build Include="dbo\Tables\Contactos.sql" />
+    <Build Include="dbo\Tables\Menu.sql" />
+    <Build Include="dbo\Tables\MenuRoles.sql" />
+    <Build Include="dbo\Tables\cp.sql" />
+    <Build Include="dbo\Tables\colonias.sql" />
+    <Build Include="dbo\Tables\poblaciones.sql" />
+    <Build Include="dbo\Tables\estados.sql" />
+    <Build Include="dbo\Tables\ActividadesContacto.sql" />
+    <Build Include="dbo\Tables\Actividades.sql" />
+    <Build Include="dbo\Tables\ActividadesContactoDetalle.sql" />
+    <Build Include="dbo\Tables\Archivos.sql" />
+    <Build Include="dbo\Tables\Configuracion.sql" />
+    <Build Include="dbo\Tables\ArchivosBitacora.sql" />
+    <Build Include="dbo\Tables\Bitacora.sql" />
+    <Build Include="dbo\Tables\Multi.sql" />
+    <Build Include="dbo\Tables\Clasificacion.sql" />
+    <Build Include="dbo\Tables\OportunidadesImportes.sql" />
+    <Build Include="dbo\Tables\ClasificacionRolesContactos.sql" />
+    <Build Include="dbo\Tables\ClassSubClass.sql" />
+    <Build Include="dbo\Tables\ContactoRol.sql" />
+    <Build Include="dbo\Tables\UsuarioConfiguracion.sql" />
+    <Build Include="dbo\Tables\ContactosEmpresas.sql" />
+    <Build Include="dbo\Tables\EmpresasUsuarios.sql" />
+    <Build Include="dbo\Tables\Escalacion.sql" />
+    <Build Include="dbo\Tables\Paises.sql" />
+    <Build Include="dbo\Tables\EtapasBitacora.sql" />
+    <Build Include="dbo\Tables\EtapasOportunidad.sql" />
+    <Build Include="dbo\Tables\CompartirEmpresas.sql" />
+    <Build Include="dbo\Tables\OportunidadesActividades.sql" />
+    <Build Include="dbo\Tables\CompartirContactos.sql" />
+    <Build Include="dbo\Tables\OportunidadesEmpresasContactosUsuarios.sql" />
+    <Build Include="dbo\Tables\CompartirOportunidades.sql" />
+    <Build Include="dbo\Tables\OportunidadesResponsables.sql" />
+    <Build Include="dbo\Tables\Roles.sql" />
+    <Build Include="dbo\Tables\SubClasificacion.sql" />
+    <Build Include="dbo\Tables\Tareas.sql" />
+    <Build Include="dbo\Tables\TareasUsuariosContactosEmpresas.sql" />
+    <Build Include="dbo\Tables\UsuariosEmpresasOportunidades.sql" />
+    <Build Include="dbo\Tables\UsuariosRoles.sql" />
+    <Build Include="dbo\Tables\SubIndustria.sql" />
+    <Build Include="dbo\Tables\Aviso.sql" />
+    <Build Include="dbo\Tables\OportunidadesUsuarios.sql" />
+    <Build Include="dbo\Tables\BitacoraUsuarios.sql" />
+    <Build Include="dbo\Tables\EtapasBitacoraUsuarios.sql" />
+    <Build Include="dbo\Tables\Empresas.sql" />
+    <Build Include="dbo\Tables\BitacoraUsuariosDetalle.sql" />
+    <Build Include="dbo\Tables\UsuariosDetalle.sql" />
+    <Build Include="dbo\Tables\Usuarios.sql" />
+    <Build Include="dbo\Tables\Fuente.sql" />
+    <Build Include="dbo\Tables\Tipo.sql" />
+    <Build Include="dbo\Tables\Industria.sql" />
+    <Build Include="dbo\Tables\UDN.sql" />
+    <Build Include="dbo\Tables\EmpresasDetalle.sql" />
+    <Build Include="dbo\Tables\EmpresasDirecciones.sql" />
+    <Build Include="dbo\Tables\Oportunidades.sql" />
+    <Build Include="dbo\Tables\OportunidadesContactos.sql" />
+    <Build Include="dbo\Tables\Moneda.sql" />
+    <Build Include="dbo\Tables\TipoPersona.sql" />
+    <Build Include="dbo\Tables\Area.sql" />
+    <Build Include="dbo\Tables\ProyectosPorMes.sql" />
+    <Build Include="dbo\Tables\ContactosActividades.sql" />
+    <Build Include="dbo\Tables\ImportesPorMes.sql" />
+    <Build Include="dbo\Tables\OtrosCorreos.sql" />
+    <Build Include="dbo\Tables\FechaVencimientoCambios.sql" />
+    <Build Include="dbo\Tables\EstadoOportunidad.sql" />
+    <Build Include="dbo\Tables\TipoActividad.sql" />
+    <Build Include="dbo\Views\vw_opor_moneda.sql" />
+    <Build Include="Security\NT AUTHORITY_SYSTEM.sql" />
+    <Build Include="Security\NT AUTHORITY_SYSTEM_1.sql" />
+    <Build Include="Security\usuario01.sql" />
+    <Build Include="Security\usuario01_1.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="dbo\Stored Procedures\Oportunidades_Agregar.sql" />
+    <Build Include="dbo\Stored Procedures\EstadisticasProyectosImportes_Actualizar.sql" />
+    <Build Include="dbo\Synonyms\OECU.sql" />
+    <Build Include="dbo\Synonyms\TUCE.sql" />
+    <Build Include="dbo\Synonyms\opor.sql" />
+    <Build Include="dbo\Synonyms\cat_area.sql" />
+    <Build Include="dbo\Synonyms\cat_fuente.sql" />
+    <Build Include="dbo\Synonyms\estadisticasimportes.sql" />
+    <Build Include="dbo\Synonyms\cat_industria.sql" />
+    <Build Include="dbo\Synonyms\cat_moneda.sql" />
+    <Build Include="dbo\Synonyms\cat_rubros.sql" />
+    <Build Include="dbo\Synonyms\cat_subindustria.sql" />
+    <Build Include="dbo\Synonyms\cat_tipo.sql" />
+    <Build Include="dbo\Synonyms\cat_tipoactividad.sql" />
+    <Build Include="dbo\Synonyms\cat_tipopersona.sql" />
+    <Build Include="dbo\Tables\EmpresasProveedores.sql" />
+    <Build Include="dbo\Stored Procedures\Empresas_Agregar.sql" />
+    <Build Include="Storage\busqueda_oportunidades.sql" />
+    <Build Include="dbo\Tables\DocumentosProveedores.sql" />
+    <Build Include="dbo\Tables\DocumentosEmpresas.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ComparacionLocalPreProductivoAProyectoS.scmp" />
+    <None Include="BorradoTablas.sql" />
+  </ItemGroup>
+</Project>

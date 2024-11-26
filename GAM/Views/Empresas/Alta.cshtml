@@ -1,0 +1,293 @@
+﻿
+@{
+    ViewBag.Title = "Empresas";
+}
+
+<input type="hidden" id="IdUsuario" name="IdUsuario" value="@Session["IdUsuario"].ToString()" />
+<input type="hidden" id="IdConfiguracion" name="IdConfiguracion" value="@Session["IdConfiguracion"].ToString()" />
+<input type="hidden" id="IdRol" name="IdRol" value="@Session["IdRol"].ToString()" />
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Alta de @GAM.Utilerias.Titulos.Empresa(Session["IdConfiguracion"].ToString(), "P")</h4>
+    </div>
+    <div class="row">
+
+        <div id="Espera" style="display:none; width:69px;height:90px;position:fixed;top:20%;left:50%;padding:2px;z-index:1000">
+            <img src="../assets/img/spinner.gif" width="64" height="64" /><br />Cargando...
+        </div>
+
+
+        <div class="col-md-12">
+
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="alert alert-info" role="alert">
+                        Las etiquetas con * indican campos de captura obligatorios
+                    </div>
+
+                    <!--Estilo 2-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">* Nombre</span>
+                                    </div>
+                                    <input type="text" id="Nombre" name="Nombre" class="form-control" aria-label="Nombre" required autocomplete="off" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Sucursal</span>
+                                    </div>
+                                    <input type="text" id="Sucursal" name="Sucursal" class="form-control" aria-label="Sucursal" required autocomplete="off" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">* RFC</span>
+                                    </div>
+                                    <input type="text" onblur="ValidaRfc(this.value)" id="RFC" name="RFC" class="form-control" aria-label="RFC" required placeholder="LLLNNNNNNAAA" maxlength="12" data-toggle="tooltip" data-placement="top" title="El RFC de empresa se compone de 3 letras, 6 números y tres letras o números, agregar sin guiones" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Dirección</span>
+                                    </div>
+                                    <input type="text" id="Direccion" name="Direccion" class="form-control" aria-label="Dirección" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Ciudad</span>
+                                    </div>
+                                    <input type="text" id="Ciudad" name="Ciudad" class="form-control" aria-label="Ciudad" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Estado</span>
+                                    </div>
+                                    <select id="Estado" name="Estado" class="form-control">
+                                        <option value="">&nbsp;</option>
+                                        @foreach (var edos in ViewBag.Estados)
+                                        {
+                                            <option value="@edos.Id">@edos.Nombre</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-action label-align-center">
+                    <button type="submit" class="btn btn-success animated bounceInDown" tabindex="11" onclick="Guardar();">Crear Empresa</button>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    function ValidaRfc(rfcStr) {
+        var strCorrecta;
+        strCorrecta = rfcStr;
+        if (rfcStr.length == 12) {
+            var valid = '^(([A-Z]|[a-z]){3})([0-9]{6})((([A-Z]|[a-z]|[0-9]){3}))';
+        } else {
+            var valid = '^(([A-Z]|[a-z]|\s){1})(([A-Z]|[a-z]){3})([0-9]{6})((([A-Z]|[a-z]|[0-9]){3}))';
+        }
+        var validRfc = new RegExp(valid);
+        var matchArray = strCorrecta.match(validRfc);
+        if (matchArray == null) {
+            alert('RFC incorrecto');
+            return false;
+        }
+        else {
+            //alert('Cadena correcta:' + strCorrecta);
+            return true;
+        }
+
+    }
+
+    $(document).ready(function () {
+        $('#opcEmpresas').addClass("nav-item active submenu");
+        $('#Nombre').select();
+
+        if ($('#IdRol').val() == '3') {
+            $("#test2").attr('checked', 'checked');
+        }
+
+
+        $("#formulario1").validate({
+            rules: {
+                ClaveActual: {
+                    required: true,
+                    minlength: 8
+                },
+                ClaveNueva: {
+                    required: true,
+                    minlength: 8
+                },
+                Repetir: {
+                    required: true,
+                    minlength: 8
+                }
+            },
+            messages: {
+
+                ClaveActual: {
+                    required: "Teclee su contraseña actual"
+                },
+                ClaveNueva: {
+                    required: "Teclee su contraseña nueva",
+                    minlength: "Su nueva contraseña debe tener por lo menos 8 caracteres"
+                },
+                Repetir: {
+                    required: "Repita su contraseña nueva",
+                    minlegth: "Su nueva contraseña debe tener por lo menos 8 caracteres"
+                }
+            }
+        });
+
+
+    });
+
+    function Guardar() {
+        if ($('#Nombre').val() == '') {
+            swal({
+                text: 'Agregue el nombre de la empresa.',
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-warning'
+                    }
+                },
+            });
+            return;
+        }
+        if ($('#RFC').val().length < 12 || $('#RFC').val().length > 12 || $('#RFC').val() === "") {
+            swal({
+                text: 'La longitud del RFC debe ser de 12 caracteres y no puede quedarse vacío.',
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-warning'
+                    }
+                },
+            });
+            return;
+        }
+        $.ajax({
+            type: "GET",
+            url: "/Empresas/Guardar/",
+            data: {
+                Nombre: $('#Nombre').val().toUpperCase(),
+                Sucursal : $('#Sucursal').val().toUpperCase(),
+                RFC: $('#RFC').val(),
+                TipoEmpresa: $("input[name='optionsRadios']:checked").val(),
+                Direccion: $('#Direccion').val(),
+                Ciudad: $('#Ciudad').val(),
+                Estado: $('#Estado').val(),
+                IdConfiguracion: $('#IdConfiguracion').val()
+
+            },
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#Espera').show();
+            },
+            success: function (data) {
+                if (data > 0) {
+                    swal({
+                        title: 'GAM ASAE',
+                        text: 'Se agregó la nueva empresa exitosamente.',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-success'
+                            }
+                        },
+                    }).then(
+                        function () {
+                            location.href = '/Empresas/Index';
+                        }
+                    );
+                }
+                else {
+                    swal({
+                        title: 'GAM ASAE',
+                        text: 'El RFC de la empresa ya existe, revise sus datos.',
+                        icon: 'warning',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-warning'
+                            }
+                        }
+                    });
+                }
+            },
+            complete: function () {
+                $('#Espera').hide();
+            },
+            error: function (errormessage) {
+                //swal({
+                //    title: 'GAM ASAE',
+                //    text: 'Ha habido un error al intentar procesar los datos',
+                //    icon: 'error',
+                //    buttons: {
+                //        confirm: {
+                //            className: 'btn btn-error'
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+</script>
+
+<script src="~/assets/js/plugin/validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.10.0/localization/messages_es.js"></script>

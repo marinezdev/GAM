@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [usuario01]
+    WITH PASSWORD = N'qihjihUbpd|.B<uljsf|rg;xmsFT7_&#$!~<{zqjzxtwp5ky', SID = 0xF7AB21EBAA5835439E0201E83F5A272C, DEFAULT_DATABASE = [GAM], DEFAULT_LANGUAGE = [us_english], CHECK_EXPIRATION = ON;
+

@@ -1,0 +1,66 @@
+﻿@using System.Web.Configuration
+
+
+@if (Session["IdConfiguracion"].ToString() == "3")
+{
+    if (Session["IdRol"].ToString() == "2" || Session["IdRol"].ToString() == "3")
+    {
+        <li class="nav-item" id="IndexHome" name="IndexHome">
+            <a href="/Home/Index">
+                <i class="fas fa-home text-primary"></i>
+                <p>Dashboard</p>
+            </a>
+        </li>
+        <li class="nav-item" id="opcEmpresas">
+            <a href="/Empresas/Index?Id=0">
+                <i class="fas fa-industry text-info"></i>
+                <p>Empresas</p>
+            </a>
+        </li>
+        if (Session["IdRol"].ToString() == "2")
+        {
+            <li class="nav-item" id="opcGerentes">
+                <a href="/Administracion/Gerentes">
+                    <i class="fas fa-user-friends text-secondary"></i>
+                    <p>Administrador Asuntos</p>
+                </a>
+            </li>
+        }
+        <li class="nav-item" id="opcContactos">
+            <a href="/Administracion/UsuariosR">
+                <i class="fas fa-address-card text-warning"></i>
+                <p>Proveedores</p>                
+            </a>
+        </li>
+        <!--li class="nav-item" id="opcContactos">
+            <a data-toggle="collapse" href="#provs">
+                <i class="fas fa-address-card text-warning"></i>
+                <p>Proveedores</p>
+                <span class="caret"></span>
+            </a>
+            <div class="collapse" id="provs">
+                <ul class="nav nav-collapse">
+                    <li id="op1">
+                        <a href="/Administracion/UsuariosR">
+                            <span class="sub-item">Proveedores</span>
+                        </a>
+                    </li>
+                    <li id="op2">
+                        <a href="/Administracion/empresas">
+                            <span class="sub-item">Empresas</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li-->
+        <li class="nav-item" id="opcOport">
+            <a href="/Oportunidades/Index">
+                <i class="fas fa-money-bill text-success"></i>
+                <p>Asuntos</p>
+            </a>
+        </li>
+
+
+    }
+}
+

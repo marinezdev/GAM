@@ -1,0 +1,385 @@
+﻿
+@{
+    ViewBag.Title = "Proveedores";
+}
+
+<script>
+    $(document).ready(function () {
+        $('#opcContactos').addClass("nav-item active submenu");
+        $('#provs').addClass("collapse show");
+        $('#op1').addClass("active");
+
+    });
+</script>
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Proveedores / Responsables</h4>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+
+                        @Html.Raw(ViewData["Mensaje"])
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <a href="/Administracion/UsuariosRAlta" class="btn btn-primary animated bounceInDown">Agregar Nuevo Proveedor/Responsable</a>
+
+                        </div>
+                        <br><br><br>
+
+                    </div>
+
+                    <div class="row mt-8" style="width:100%">
+
+
+
+
+
+
+
+                        <!--tabla aquí-->
+
+                        <div class="table-responsive" style="width: 100%">
+
+                            <table id="basic-datatables" class="display compact table-striped table-hover" style="width:100%">
+                                <thead class="header">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                        <th>Teléfono</th>
+                                        <th>Celular</th>
+                                        <th>Persona</th>
+                                        <th>Procedencia</th>
+                                        <th>Modificar</th>
+                                        <th width="2%">Eliminar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var items in ViewBag.Usuarios)
+                                    {
+                                        <tr>
+                                            <td>@items.Nombre</td>
+                                            <!--td>@items.EmpresaNombre</td-->
+                                            <td>@items.Correo</td>
+                                            <td>@items.Telefono</td>
+                                            <td>@items.Celular</td>
+                                            <td>
+                                                @if (items.FisicaMoral == 1)
+                                                {
+                                                    <span>Física</span>
+                                                }
+                                                else if (items.FisicaMoral == 2)
+                                                {
+                                                    <span>Moral</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>No definido</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (items.InternoExterno == 1)
+                                                {
+                                                    <span>Interno</span>
+                                                }
+                                                else if (items.InternoExterno == 2)
+                                                {
+                                                    <span>Externo</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>No definido</span>
+                                                }
+                                            </td>
+                                            <td align="center">
+                                                <a href="#" onclick="ObtenerDetalleVistaRapida(@items.Id)"><i class="fas fa-clipboard-list"></i></a>
+                                            </td>
+                                            <td style="font-size:15px; text-align:center"><a href="#" onclick=" SeguroEliminarArchivo(@items.Id);"><i class="fas fa-trash text-danger"></i></a></td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div id="vistadetalle" class="col-md-4" style="display: none">
+            <div class="card">
+                <h5 class="card-header" style="background-color: #1572E8;color: white"></h5>
+                <div class="card-body">
+                    <h4 class="card-title">Vista Rápida </h4>
+                    <div class="user-profile text-left">
+
+                        <div>
+
+                            <div id="nombre"></div>
+                            <div id="internoexterno"></div>
+                            <div id="fisicamoral"></div>
+                            <div id="rfc"></div>
+                            <div id="correo"></div>
+                            <div id="telefono"></div>
+                            <div id="celular"></div>
+                            <div id="direccion"></div>
+                            <div id="ciudad"></div>
+                            <div id="notas"></div>
+
+                        </div>
+
+                        <br />
+                        <p><strong>Asuntos Relacionados</strong></p>
+                        <div id="tblAsuntos"></div>
+
+                        <br />
+
+                        <p><strong>Documentos Relacionados</strong></p>
+                        <div id="tblDocumentos"></div>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row user-stats text-center">
+                        <div class="col">
+                            <div id="leditar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+</div>
+
+<script>
+    function SeguroEliminarArchivo(id) {
+        swal({
+            title: 'Eliminación de Usuarios',
+            text: "¿Está seguro de querer eliminar este Usuario?",
+            type: 'warning',
+            buttons: {
+                confirm: {
+                    text: '¡Si, eliminarlo!',
+                    className: 'btn btn-success'
+                },
+                cancel: {
+                    visible: true,
+                    className: 'btn btn-warning',
+                    text: 'Cancelar'
+                }
+            }
+        }).then((Delete) => {
+            if (Delete) {
+                SeguroEliminarArchivo2(id);
+            }
+        });
+    }
+
+    function SeguroEliminarArchivo2(id) {
+        $.ajax({
+            type: 'GET',
+            url: "/Administracion/QuitarUsuario",
+            data: {
+                iduser: id
+            },
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.length);
+                if (data.length > 0 || data == '') {
+
+                    $.notify('Se eliminó el Usuario exitosamente.', {
+                        autohide: true, type: 'success', placement: {
+                            from: 'bottom',
+                            align: 'right'
+                        }
+                    });
+                }
+                location.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+    }
+
+    function ObtenerDetalleVistaRapida(idusuario) {
+        $('#vistadetalle').show();
+        $.ajax({
+            type: "GET",
+            url: "/Administracion/SeleccionarDetalleProveedor",
+            data: { idusuario: idusuario },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $('#nombre').html('<strong>Nombre:</strong> ' + data.Usuarios.Nombre + '<br>');
+                $('#internoexterno').html('<strong>Procedencia:</strong> ' + InternoExterno(data.Usuarios.InternoExterno) + '<br>');
+                $('#fisicamoral').html('<strong>Persona:</strong> ' + FisicaMoral(data.Usuarios.FisicaMoral) + '<br>');
+                $('#rfc').html('<strong>RFC:</strong> ' + data.Usuarios.RFC + '<br>');
+                $('#correo').html('<strong>Correo:</strong> ' + data.Usuarios.Correo + '<br>');
+                $('#telefono').html('<strong>Teléfono:</strong> ' + data.Usuarios.Telefono + '<br>');
+                $('#celular').html('<strong>Celular:</strong> ' + data.Usuarios.Celular + '<br>');
+                $('#direccion').html('<strong>Dirección:</strong> ' + data.Usuarios.Direccion + '<br>');
+                $('#ciudad').html('<strong>Ciudad:</strong> ' + data.Usuarios.Ciudad + '<br>');
+                $('#notas').html('<strong>Notas:</strong> ' + data.Usuarios.Notas + '<br>');
+                $('#leditar').html('<a href=/Administracion/UsuariosREdicion?IdUsuario=' + data.Usuarios.Id + ' class="btn btn-default btn-block"><i class="fa fa-pen"></i>&nbsp;Editar</a>');
+
+                ObtenerDetalleAsuntosAsignados(idusuario);
+                ObtenerDetalleDocumentosRelacionados(idusuario);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+    }
+
+    function ObtenerDetalleAsuntosAsignados(idusuario) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Administracion/ObtenerDdtalleAsuntosAsignados",
+            data: { idusuario: idusuario },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    $('#tblAsuntos').html('');
+                    var firstRow = '<table class=table><thead>';
+                    firstRow += '<tr><th>Nombre</th><th>Vencimiento</th></tr></thead><tbody>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        var fecha = new Date(parseInt(data[i].Cierre.substr(6)));
+                        firstRow += '<tr>' +
+                            '<td>' + data[i].Nombre + '</td>' +
+                            '<td>' + fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear() + '</td>' +
+                            '</tr > ';
+                    }
+                    firstRow += '</tbody></table>';
+                    $('#tblAsuntos').html(firstRow);
+                }
+                else {
+                    $('#tblAsuntos').html('<span class=text-warning>Ningún asunto está relacionado aún para esta proveedor/responsable</span>');
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+
+    }
+
+    function ObtenerDetalleDocumentosRelacionados(idusuario) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Administracion/CargaInicialArchivos",
+            data: { idproveedor: idusuario },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                if (data.length > 0) {
+                    $('#tblDocumentos').html('');
+                    var firstRow = '<table class=table><thead>';
+                    firstRow += '<tr><th>Nombre y Fecha</th></tr></thead><tbody>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        var fecha = new Date(parseInt(data[i].Fecha.substr(6)));
+                        var mes = (fecha.getMonth() + 1) < 10 ? '0' + (fecha.getMonth() + 1) : (fecha.getMonth() + 1);
+                        var fecha = fecha.getDate() + '/' + mes + '/' + fecha.getFullYear();
+                        firstRow += '<tr>' +
+                            '<td><a href=/Documentos/' + data[i].Nombre + ' target=_blank>' + data[i].Nombre + ' (' + fecha + ')</a></td>' +
+                            '</tr> ';
+                    }
+                    firstRow += '</tbody></table>';
+                    $('#tblDocumentos').html(firstRow);
+                }
+                else {
+                    $('#tblDocumentos').html('<span class=text-warning>Ningún documento está relacionado aún para este proveedor/responsable</span>');
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+
+    }
+
+    function InternoExterno(valor) {
+        if (valor == '1')
+            return 'Interno';
+        else
+            return 'Externo';
+    }
+
+    function FisicaMoral(valor) {
+        if (valor == '1')
+            return 'Física';
+        else
+            return 'Moral';
+    }
+
+</script>
+
+

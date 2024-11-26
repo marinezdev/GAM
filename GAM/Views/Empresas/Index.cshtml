@@ -1,0 +1,850 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+
+    var conf2 = Session["IdConfiguracion"].ToString() == "2" ? true : false;
+    var conf3 = Session["IdConfiguracion"].ToString() == "3" ? true : false;
+
+}
+
+
+
+<input type="hidden" id="checado" value="@TempData["Checado"]" />
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">@GAM.Utilerias.Titulos.Empresa(Session["IdConfiguracion"].ToString(), "P")</h4>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+
+                        @Html.Raw(ViewData["Mensaje"])
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <a href="/Empresas/Alta" class="btn btn-primary animated bounceInDown">Agregar Nueva Empresa</a>
+                        </div>
+                        <br><br><br>
+
+                    </div>
+
+                    <div class="row mt-8">
+                        <!--tabla aquí-->
+                        <div class="table-responsive" style="width: 100%">
+
+                            <table  class="table-striped table-hover" style="width: 100%;">
+                                <thead class="header">
+                                    <tr>
+                                        <th style="color: transparent; width:0px"></th>
+                                        <th>Nombre</th>
+                                        <th>RFC</th>
+                                        <th>Estado</th>
+                                        <th>Detalle</th>
+                                        <th width="2%">Eliminar</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                  @foreach (var items in ViewBag.Empresas)
+                                   {
+                                        var tipo = items.Tipo == 1 ? "Cliente" : "Prospecto";
+                                      <tr>
+                                        <td style="color: transparent; width:0px">@items.Id</td>
+                                        <td>
+                                            @items.Nombre
+
+                                            @if (items.Sucursal.Length > 0)
+                                            {
+                                                <small>(@items.Sucursal)</small>
+                                            }
+                                        </td>
+                                        <td>@items.RFC</td>
+                                        <td>@GAM.Utilerias.Funciones.EstadosNombre(@items.Estado.ToString())</td>
+                                        <td align="center"><a href="#" onclick="Ver(@items.Id)"><i class='fas fa-clipboard-list' data-toggle='tooltip' data-placement='left' title='Detalle'></i></a></td>
+                                        @*<td align="center"><a href="#" onclick="ObtenerDetalleVistaRapida(@items.Id)"><i class='fas fa-clipboard-list' data-toggle='tooltip' data-placement='left' title='Detalle'></i></a></td>*@
+                                        <td style="font-size:15px; text-align:center"><a href="#" onclick=" SeguroEliminarArchivo(@items.Id);"><i class="fas fa-trash text-danger"></i></a></td>
+                                
+                                    </tr>
+                                   }
+
+                                </tbody>
+                            </table>
+                            <br /><br /><br />
+                            @if (ViewBag.EmpresasCompartidas != null)
+                            {
+                                <h4>Empresas Compartidas</h4>
+                                <table id="multi-filter-select2" class="display table-striped table-hover" style="width: 100%; cursor: pointer">
+                                    <thead class="header2">
+                                        <tr>
+                                            <th></th>
+                                            <th>Nombre</th>
+                                            <th>RFC</th>
+                                            <th>Estado</th>
+                                            <th>Interna/Externa</th>
+                                            <th>Detalle</th>
+                                            <th width="2%">Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th>Nombre</th>
+                                            <th>RFC</th>
+                                            <th>Estado</th>
+                                            <th>Interna/Externa</th>
+
+
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+
+                                        @foreach (var items in ViewBag.EmpresasCompartidas)
+                                        {
+                                            var tipo = items.Tipo == 1 ? "Cliente" : "Prospecto";
+                                            <tr>
+                                                <td style="color: transparent; width:0px">@items.Id</td>
+                                                <td>@items.Nombre</td>
+                                                <td>@items.RFC</td>
+                                                <td>@GAM.Utilerias.Funciones.EstadosNombre(@items.Estado.ToString())</td>
+                                                <td>@GAM.Utilerias.Funciones.TipoEmpresaNombre(items.InternaExterna.ToString())</td>
+                                                <td align="center"><a href=/Empresas/Editar?Id =@items.Id><i class='fas fa-clipboard-list' data-toggle='tooltip' data-placement='top' title='Detalle'></i></a></td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            }
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="vistadetalle" class="col-md-4" style="display:none">
+            <div class="card">
+                <h5 class="card-header" style="background-color: #1572E8;color: white"></h5>
+                <div class="card-body">
+                    <h4 class="card-title">Vista Rápida </h4>
+                    <div>
+
+                        <div id="nombre"></div>
+                        <div id="sucursal"></div>
+                        <div id="rfc"></div>
+                        <div id="direccion"></div>
+                        <div id="ciudad"></div>
+                        <div id="estado"></div>
+                    </div>
+
+                    <br />
+                    <p><strong>Asuntos Relacionados</strong></p>
+                    <div id="tblAsuntos"></div>
+                </div>
+                <div class="card-footer">
+                    <div class="row user-stats text-center">
+                        <div class="col">
+                            <div id="leditar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+
+        <div id="vistadetalleDoc" class="col-md-4" >
+            <div class="card">
+                <h5 class="card-header" style="background-color: #1572E8;color: white"></h5>
+                <div class="card-body">
+                    <h4 class="card-title">Vista Rápida </h4>
+                    @if (Convert.ToInt32(@Request["Id"]) != 0)
+                    {
+                        foreach (var items in GAM.Models.Catalogos.SeleccionarPorIdempresa(@Request["Id"]))
+                        {
+                            <div>
+                                <div id="nombre"><strong>Nombre:</strong></div> <label>@items.Nombre</label>
+                                <div id="sucursal"><strong>Sucursal:</strong></div><label>@items.Sucursal</label>
+                                <div id="rfc"><strong>RFC:</strong></div><label>@items.RFC</label>
+                                <div id="direccion"><strong>Dirección:</strong></div><label>@items.Direccion</label>
+                                <div id="ciudad"><strong>Ciudad:</strong></div><label>@items.Ciudad</label>
+                                <div id="estado"><strong>Estado:</strong></div><label>@items.Estado</label>
+                            </div>
+
+                        }
+                            <div class="card">
+
+                                <div class="card-body">
+
+                                    <div class="tab-pane fade active show" id="v-pills-home-icons" role="tabpanel" aria-labelledby="v-pills-home-tab-icons" style="width: 90%">
+                                        <div class="accordion accordion-secondary">
+
+                                            @foreach (var items in GAM.Models.Catalogos.ListarClas("DocumentosASAEClasificacion", @Request["Id"]))
+                                            {
+
+                                                var encabezado = "heading" + items.Id;
+                                                var colapso = "colapso" + items.Id;
+                                                var gcolapso = "#colapso" + items.Id;
+                                                <div class="card">
+                                                    <div class="card-header collapsed" id="@encabezado" data-toggle="collapse" data-target="@gcolapso" aria-expanded="false" aria-controls="@colapso" role="button">
+                                                        <div class="span-icon">
+                                                            <div class="fas fa-folder text-warning"></div>
+                                                        </div>
+                                                        <div class="span-title text-dark fw-bold">
+                                                            @items.Nombre
+                                                        </div>
+                                                        <div class="span-mode text-dark"></div>
+                                                    </div>
+
+                                                    <div id="@colapso" class="collapse" aria-labelledby="@encabezado" data-parent="#accordion">
+                                                        <div class="card-body">
+                                                            <!--INICIO TABLA CLASIFCACIONES-->
+                                                            @if (GAM.Models.Catalogos.SeleccionarClasificacionesDocumentos(items.Id.ToString()).Count() > 0) //CONTEO ES 0
+                                                            {
+
+
+                                                                foreach (var datos in GAM.Models.Catalogos.SeleccionarClasificacionesDocumentos(items.Id.ToString()))
+                                                                {
+                                                                    if (datos.IdEmpresa == Convert.ToInt32(@Request["Id"]))
+                                                                    {
+
+                                                                        <a href="#" onclick="VerRegistro(@datos.Id);">@datos.Nombre</a>
+                                                                        <br />
+                                                                        @datos.Fecha
+                                                                        <hr />
+
+                                                                    }
+                                                                }
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <label class="label label-align-center">No se han agregado documentos.</label>
+                                                            }
+                                                            <!--FIN TABLA CLASIFCACIONES-->
+                                                            @foreach (var itemss in GAM.Models.Catalogos.SeleccionarSubConsulta2("DocumentosASAESubClasificacion", "IdClasificacion", items.Id.ToString()))
+                                                            {
+                                                                var encabezadoo = "headingg" + itemss.Id;
+                                                                var colapsoo = "colapsoo" + itemss.Id;
+                                                                var gcolapsoo = "#colapsoo" + itemss.Id;
+                                                                <div class="card">
+                                                                    <div class="card-header collapsed" id="@encabezadoo" data-toggle="collapse" data-target="@gcolapsoo" aria-expanded="false" aria-controls="@colapsoo" role="button">
+                                                                        <div class="span-icon">
+                                                                            <div class="fas fa-folder text-primary"></div>
+                                                                        </div>
+                                                                        <div class="span-title text-dark">
+                                                                            @itemss.Nombre
+                                                                        </div>
+                                                                        <div class="span-mode text-dark"></div>
+                                                                    </div>
+
+                                                                    <div id="@colapsoo" class="collapse" aria-labelledby="@encabezadoo" data-parent="#accordion">
+                                                                        <div class="card-body" style="background-color: gainsboro">
+
+
+                                                                            <!--INICIO SUB CLASIFICACIONES-->
+                                                                            @if (GAM.Models.Catalogos.SeleccionarClasificacionSubClasificacionDocumentos(items.Id.ToString(), itemss.Id.ToString()).Count() > 0)
+                                                                            {
+
+                                                                                foreach (var datoss in GAM.Models.Catalogos.SeleccionarClasificacionSubClasificacionDocumentos(items.Id.ToString(), itemss.Id.ToString()))
+                                                                                {
+
+                                                                                    <a href="#" onclick="VerRegistro(@datoss.Id);">@datoss.Nombre</a>
+                                                                                    <br />
+                                                                                    @datoss.Fecha
+                                                                                    <hr />
+                                                                                }
+
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <label class="label label-align-center">No se han agregado documentos.</label>
+                                                                            }
+                                                                            <!--FIN SUB CLASIFICACIONES-->
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            }
+
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <a href="#" onclick="Editar(@Request["Id"]);" class="btn btn-default btn-block"><i class="fa fa-pen"></i>&nbsp;Editar</a>
+
+
+                     }
+                    else{
+                            <h5 > Ningun dato </h5 >
+                    }
+               </div >
+                    <div class="card-footer">
+                        <div class="row user-stats text-center">
+                            <div class="col">
+                                <div id = "leditar" ></div >
+                            </div >
+                        </div >
+                    </div >
+                </div >
+            </div >
+        </div >
+</div >
+
+
+<!--VIEW registro -->
+<div class="modal fade" id="ModalPDF" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="ModalTitulo"></h3>
+                    <button type = "button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+            <div class="modal-body" style="min-height:500px;">
+
+                <div class="col-md-12">
+
+                    <div class="row">
+
+                        <div class="col-md-12" style="min-height: 500px; ">
+
+                            <!--pantalla de visualización-->
+                            <div style="width: 100%; height: 100%">
+                                <!--documento aquí-->
+                                <iframe id="iframepdf" title="webviewer" frameborder="0" width="100%" height="100%" toolbar="0" onload="disableContextMenu();"></iframe>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    function Ver(id) {
+        window.location.href = '@Url.Action("Index", "Empresas")?Id=' + id;
+    }
+    function Editar(id) {
+        window.location.href = '@Url.Action("Editar", "Empresas")?Id=' + id;
+    }
+
+
+    function SeguroEliminarArchivo(id) {
+
+        swal({
+            title: 'Eliminación de registros',
+            text: "¿Está seguro de querer eliminar esta empresa?",
+            type: 'warning',
+            buttons: {
+                confirm: {
+                    text: '¡Si, eliminarlo!',
+                    className: 'btn btn-success'
+                },
+                cancel: {
+                    visible: true,
+                    className: 'btn btn-warning',
+                    text: 'Cancelar'
+                }
+            }
+        }).then((Delete) => {
+            if (Delete) {
+                SeguroEliminarArchivo2(id);
+            }
+        });
+    }
+
+    function SeguroEliminarArchivo2(id) {
+
+        $.ajax({
+            type: 'GET',
+            url: "/Empresas/Quitarempresa",
+            data: {
+                idempresa: id
+            },
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data.length);
+                if (data.length > 0 || data == '') {
+
+                    $.notify('Se eliminó la empresa exitosamente.', {
+                        autohide: true, type: 'success', placement: {
+                            from: 'bottom',
+                            align: 'right'
+                        }
+                    });
+                }
+                location.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+    }
+
+
+    function ObtenerDetalleVistaRapida(id) {
+        $('#vistadetalle').show();
+        $('#vistadetalleDoc').hide();
+
+        $.ajax({
+            type: "GET",
+            url: "/Empresas/EmpresasDetalleMostrar",
+            data: { idempresa: id },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $('#IdEmpresaTest').html(data.Id);
+                $('#nombre').html('<strong>Nombre:</strong> ' + data.Nombre + '<br>');
+                $('#sucursal').html('<strong>Sucursal:</strong> ' + data.Sucursal + '<br>');
+                $('#rfc').html('<strong>RFC:</strong> ' + data.RFC + '<br>');
+                $('#direccion').html('<strong>Dirección:</strong> ' + data.Direccion + '<br>');
+                $('#ciudad').html('<strong>Ciudad:</strong> ' + data.Ciudad + '<br>');
+                var nombreestado = EstadosNombre(data.Estado.toString());
+                $('#estado').html('<strong>Estado:</strong> ' + nombreestado);
+                $('#leditar').html('<a href=/Empresas/Editar?Id=' + data.Id + ' class="btn btn-default btn-block"><i class="fa fa-pen"></i>&nbsp;Editar</a>');
+
+                ObtenerDetalleAsuntosAsignados(id);
+
+                ObtenerDetalleDocumentosRelacionados(id);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+    }
+
+    function EstadosNombre(estado) {
+
+        switch (estado) {
+            case '1':
+                return 'Aguascalientes';
+            case '2':
+                return 'Baja California Norte';
+            case '3':
+                return 'Baja California Sur';
+            case '4':
+                return 'Campeche';
+            case '5':
+                return 'Coahuila';
+            case '6':
+                return 'Colima';
+            case '7':
+                return 'Chiapas';
+            case '8':
+                return 'Chihuahua';
+            case '9':
+                return 'CDMX';
+            case '10':
+                return 'Durango';
+            case '11':
+                return 'Estado De Mexico';
+            case '12':
+                return 'Guanajuato';
+            case '13':
+                return 'Guerrero';
+            case '14':
+                return 'Hidalgo';
+            case '15':
+                return 'Jalisco';
+            case '16':
+                return 'Michoacan';
+            case '17':
+                return 'Morelos';
+            case '18':
+                return 'Nayarit';
+            case '19':
+                return 'Nuevo León';
+            case '20':
+                return 'Oaxaca';
+            case '21':
+                return 'Puebla';
+            case '22':
+                return 'Querétaro';
+            case '23':
+                return 'Quintana Roo';
+            case '24':
+                return 'San Luis Potosí';
+            case '25':
+                return 'Sinaloa';
+            case '26':
+                return 'Sonora';
+            case '27':
+                return 'Tabasco';
+            case '28':
+                return 'Tamaulipas';
+            case '29':
+                return 'Tlaxcala';
+            case '30':
+                return 'Veracruz';
+            case '31':
+                return 'Yucatán';
+            case '32':
+                return 'Zacatecas';
+        }
+
+    }
+
+    function ObtenerDetalleAsuntosAsignados(idempresa) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Empresas/EmpresaEnOportunidades",
+            data: { idempresa: idempresa },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    $('#tblAsuntos').html('');
+                    var firstRow = '<table class=table><thead>';
+                    firstRow += '<tr><th>Nombre</th><th>Vencimiento</th></tr></thead><tbody>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        var fecha = new Date(parseInt(data[i].Cierre.substr(6)));
+                        firstRow += '<tr>' +
+                            '<td><a href=/Oportunidades/Edicion?Id=' + data[i].Id + '>' + data[i].Nombre + '</a></td>' +
+                            '<td>' + fecha.getDate() + '/' + (fecha.getMonth() + 1) + '/' + fecha.getFullYear() + '</td>' +
+                            '</tr > ';
+                    }
+                    firstRow += '</tbody></table>';
+                    $('#tblAsuntos').html(firstRow);
+                }
+                else {
+                    $('#tblAsuntos').html('<span class=text-warning>Ningún asunto está relacionado aún para esta empresa</span>');
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+
+    }
+
+    function ObtenerDetalleDocumentosRelacionados(idempresa) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Empresas/CargaInicialArchivos",
+            data: { idempresa: idempresa },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+                    $('#tblDocumentos').html('');
+                    var firstRow = '<table class=table><thead>';
+                    firstRow += '<tr><th>Nombre y Fecha</th></tr></thead><tbody>';
+                    var len = data.length;
+                    for (var i = 0; i < len; i++) {
+                        var fecha = new Date(parseInt(data[i].Fecha.substr(6)));
+                        var mes = (fecha.getMonth() + 1) < 10 ? '0' + (fecha.getMonth() + 1) : (fecha.getMonth() + 1);
+                        var fecha = fecha.getDate() + '/' + mes + '/' + fecha.getFullYear();
+                        firstRow += '<tr>' +
+                            '<td><a href=/Documentos/' + data[i].Nombre + ' target=_blank>' + data[i].Nombre + ' (' + fecha + ')</a></td>' +
+                            '</tr> ';
+                    }
+                    firstRow += '</tbody></table>';
+                    $('#tblDocumentos').html(firstRow);
+                }
+                else {
+                    $('#tblDocumentos').html('<span class=text-warning>Ningún documento está relacionado aún para esta empresa</span>');
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+
+    }
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        //Selecciona y deja activa opción del menú
+        $('#opcEmpresas').addClass("nav-item active submenu");
+
+        //Permite un click en la fila de la tabla
+        $("#multi-filter-select").delegate("tr", "click", function () {
+            var firstCellText = $("td:first", this).text();
+            if (firstCellText != "") {
+                //location.href = '/Empresas/Editar?Id=' + firstCellText;
+                ObtenerDetalleVistaRapida(firstCellText);
+            }
+        });
+
+        //Permite un click en la fila de la tabla
+        $("#multi-filter-select2").delegate("tr", "click", function () {
+            var firstCellText = $("td:first", this).text();
+            if (firstCellText != "") {
+                location.href = '/Empresas/Editar?Id=' + firstCellText;
+            }
+        });
+
+        //Validación de opciones de radio
+        if ($("#checado").val() === '1') {
+            $('input:radio[class=form-radio-input][id=tipo1]').prop('checked', true);
+        }
+        else {
+            $('input:radio[class=form-radio-input][id=tipo1]').prop('checked', false);
+        }
+        if ($("#checado").val() === '2') {
+            $('input:radio[class=form-radio-input][id=tipo2]').prop('checked', true);
+        }
+        else {
+            $('input:radio[class=form-radio-input][id=tipo2]').prop('checked', false);
+        }
+
+        //Inicializa tabla
+        $('#multi-filter-select').DataTable({
+            columnDefs: [
+                {
+                    //"orderable": false,
+                    //"targets": [0, 8],
+                    //"width": "0px"
+                }
+            ],
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            "pageLength": 50,
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select class="form-control"><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+
+        //Inicializa tabla
+        $('#multi-filter-select2').DataTable({
+            columnDefs: [
+                {
+                    // "orderable": false,
+                    // "targets": [0, 8],
+                    // "width": "0px"
+                }
+            ],
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            "pageLength": 50,
+            initComplete: function () {
+                this.api().columns().every(function () {
+                    var column = this;
+                    var select = $('<select class="form-control"><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+        });
+
+        $('#Espera').hide();
+    });
+
+    //Solicita un cambio al creador del registro
+    function SolicitarCambios(idusuario, idempresa) {
+        swal({
+            title: 'Solicitar Modificación de Detalle',
+            html: '<br><input class="form-control" placeholder="Agregue brevemente lo que desea que cambie el creador de la empresa" id="input-field">',
+            content: {
+                element: "input",
+                attributes: {
+                    placeholder: "Solicito que se cambie o agregue",
+                    type: "text",
+                    id: "input-field",
+                    className: "form-control"
+                },
+            },
+            buttons: {
+                cancel: {
+                    visible: true,
+                    className: 'btn btn-danger'
+                },
+                confirm: {
+                    className: 'btn btn-success'
+                }
+            },
+        }).then(
+            function () {
+                //Enviar un correo solicitando el cambio o el agregado
+                if ($('#input-field').val() == '') { }
+                else {
+                    EnviarCorreo(idusuario, idempresa, $('#input-field').val());
+                }
+            }
+        );
+    }
+
+    //Envía un correo al creador del registro
+    function EnviarCorreo(idusuario, idempresa, mensaje) {
+        $.ajax({
+            type: "GET",
+            url: "/Empresas/EnviarCorreoCambios",
+            data: { idusuario: idusuario, idempresa: idempresa, mensaje: mensaje },
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#Espera').show();
+            },
+            success: function (data) {
+
+                if (data == "1") {
+                    swal({
+                        title: 'GAM ASAE',
+                        text: 'Se envió el correo con la solicitud.',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-success'
+                            }
+                        },
+                    });
+                }
+            },
+            complete: function () {
+                $('#Espera').hide();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+    }
+
+
+    //MODAL PDF
+    function VerRegistro(id) {
+
+        $('#ModalPDF').modal('show');
+        SeleccionarPorId2(id);
+    }
+
+
+
+    function SeleccionarPorId2(id) {
+
+        $.ajax({
+            url: "/Empresas/DocumentoSeleccionarPorId/",
+            data: { id: id },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#Espera').show();
+            },
+            success: function (data) {
+
+                $('#Notas').val(data.Notas);
+                $('#IdDocumento').val(data.Id);
+                $('#ModalTitulo').text('Datos del documento: ' + data.Nombre)
+                $('#iframepdf').attr('src', '/Documentos/' + data.Nombre + '#toolbar=0');
+            },
+            complete: function () {
+                $('#Espera').hide();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+    }
+
+
+    //Autoenvío de formulario
+    $(document).on('change', 'input[name="tipo"]:radio', function () {
+        $('#formulariotipoempresa').submit();
+    });
+
+</script>

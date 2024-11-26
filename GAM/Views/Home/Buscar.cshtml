@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "Buscar";
+}
+
+<style>
+    table.dataTable thead tr {
+        background-color: #1572E8;
+        color: white
+    }
+
+    table.dataTable tbody tr:hover {
+        background-color: cadetblue;
+        color: white
+    }
+
+    .header th {
+        height: 25px;
+        line-height: 2px;
+        background-color: deepskyblue
+    }
+
+
+</style>
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Resultados de búsqueda</h4>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                @if (ViewBag.BusquedaGeneral != null)
+                                {
+                                    if (ViewBag.BusquedaGeneral.Count > 0)
+                                    {
+                                        var palabradebusqueda = "";
+                                        if (ViewBag.BusquedaGeneral[0].PalabraBuscada.ToString() != "")
+                                        {
+                                            palabradebusqueda = ViewBag.BusquedaGeneral[0].PalabraBuscada;
+                                        }
+                                        else if (ViewBag.BusquedaGeneral[0].EmpresaBuscada.ToString() != "")
+                                        {
+                                            palabradebusqueda = ViewBag.BusquedaGeneral[0].EmpresaBuscada;
+                                        }
+                                        <h3>Palabra buscada: <strong>@palabradebusqueda</strong></h3>
+                                        <table class="table-striped table-hover" style="width: 100%">
+                                            <thead class="header">
+                                                <tr>
+                                                    <th>Asunto/Empresa/Proveedor</th>
+                                                    <th>Nombre</th>
+                                                    <th>Archivo</th>
+                                                    <th>Fecha</th>
+                                                    <th>Creador</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in ViewBag.BusquedaGeneral)
+                                                {
+                                                    var fecha = item.Fecha == DateTime.Parse("1900/01/01") ? "" : item.Fecha.ToString("dd/MM/yy");
+
+                                                    <tr>
+                                                        <td>@item.EncontradoEn</td>
+                                                        <td>@Html.Raw(item.Nombre)</td>
+                                                        <td>@Html.Raw(item.Archivo)</td>
+                                                        <td>@fecha</td>
+                                                        <td>@GAM.Models.Catalogos.SeleccionarNombrePorId(item.Creador.ToString(), "usuarios")</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-warning">Ningún dato coincide con su búsqueda</p>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    
+
+</script>

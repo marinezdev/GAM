@@ -1,0 +1,1102 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<script>
+    $(document).ready(function () {
+
+        $('#IndexHome').addClass("nav-item active submenu");
+
+        //Gráficos SABE
+
+        if ($('#IdConfiguracion').val() === '3') {
+
+            AsuntosPorEmpresaGeneral();
+
+            AsuntosPorEmpresaEstado1();
+
+            AsuntosPorEmpresaEstado1_2();
+
+            AsuntosPorEmpresaEstado1_3();
+
+            AsuntosPorEmpresaEstado1_4();
+
+            //AsuntosPorEmpresaEstado2();
+
+            AsuntosPorEmpresaEstado5();
+
+            AsuntosPorEmpresaEstado6();
+
+            //AsuntosPorEmpresaEstado7();
+
+            //AsuntosPorClasificacion();
+
+            AsuntosARepetirse6Meses();
+
+            AsuntosARepetirse1Año();
+
+            AsuntosARepetirse2Años();
+
+
+            $('#lineChart').sparkline([105, 103, 123, 100, 95, 105, 115], {
+                type: 'line',
+                height: '70',
+                width: '100%',
+                lineWidth: '2',
+                lineColor: '#ffa534',
+                fillColor: 'rgba(255, 165, 52, .14)'
+            });
+        }
+
+    });
+
+    //***********************************************************************
+
+    //SABE
+    function AsuntosPorEmpresaGeneral() {
+        $.ajax({
+            url: "/Home/AsuntosPorEmpresaGeneral",
+            data: { idconfiguracion: $('#IdConfiguracion').val() },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#EsperaGrafico1').show();
+            },
+            success: function (data) {
+
+                var lista1 = [];
+                var EmpresasEnProceso = [];
+                for (var i = 0; i < data.length; i++) {
+                    EmpresasEnProceso.push(data[i].Empresas.Nombre.substring(0, 6));
+                }
+
+                var AsuntosPorEmpresa = [];
+                for (var ii = 0; ii < data.length; ii++) {
+                    AsuntosPorEmpresa.push(data[ii].Empresas.Sector);
+                }
+
+                var mytotalIncomeChart = new Chart(Grafico1, {
+                    type: 'bar',
+                    data: {
+                        showInLegend: true,
+                        labels: EmpresasEnProceso,
+                        datasets: [{
+                            label: "Asuntos Por Empresa",
+                            backgroundColor: '#ADD8E6',
+                            borderColor: 'rgb(10, 100, 200)',
+                            data: AsuntosPorEmpresa,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false,
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    display: false,
+                                    min: 0
+                                },
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }]
+                        },
+                    }
+                });
+            },
+            complete: function () {
+                $('#EsperaGrafico1').hide();
+            },
+            error: function (errormessage) {
+                //swal({
+                //    title: 'GAM ASAE',
+                //    text: 'Ha habido un error al intentar procesar los datos',
+                //    icon: 'error',
+                //    buttons: {
+                //        confirm: {
+                //            className: 'btn btn-error'
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+
+    function AsuntosPorEmpresaEstado1() {
+        $.ajax({
+            url: "/Home/AsuntosPorEmpresaGeneralPorEstado1_1/",
+            data: { idconfiguracion: $('#IdConfiguracion').val() },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#EsperaGrafico2').show();
+            },
+            success: function (data) {
+
+                var EmpresasEnProceso = [];
+                for (var i = 0; i < data.length; i++) {
+                    EmpresasEnProceso.push(data[i].Empresas.Nombre.substring(0, 6));
+                }
+
+                var AsuntosPorEmpresa = [];
+                for (var ii = 0; ii < data.length; ii++) {
+                    AsuntosPorEmpresa.push(data[ii].Empresas.Sector);
+                }
+
+                var mytotalIncomeChart = new Chart(Grafico2, {
+                    type: 'bar',
+                    showInLegend: true,
+                    data: {
+                        labels: EmpresasEnProceso,
+                        datasets: [{
+                            label: "Asuntos",
+                            backgroundColor: '#ADD8E6',
+                            borderColor: 'rgb(23, 125, 255)',
+                            data: AsuntosPorEmpresa,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false,
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    display: false,
+                                    min: 0
+                                },
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }]
+                        },
+                    }
+                });
+            },
+            complete: function () {
+                $('#EsperaGrafico2').hide();
+            },
+            error: function (errormessage) {
+                //swal({
+                //    title: 'GAM ASAE',
+                //    text: 'Ha habido un error al intentar procesar los datos',
+                //    icon: 'error',
+                //    buttons: {
+                //        confirm: {
+                //            className: 'btn btn-error'
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+
+    function AsuntosPorEmpresaEstado5() {
+        $.ajax({
+            url: "/Home/AsuntosPorEmpresaGeneralPorEstado/",
+            data: { estado: '5', idconfiguracion: $('#IdConfiguracion').val() },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#EsperaGrafico3').show();
+            },
+            success: function (data) {
+
+                var lista1 = [];
+                var EmpresasEnProceso = [];
+                for (var i = 0; i < data.length; i++) {
+                    EmpresasEnProceso.push(data[i].Empresas.Nombre.substring(0, 6));
+                }
+
+                var AsuntosPorEmpresa = [];
+                for (var ii = 0; ii < data.length; ii++) {
+                    AsuntosPorEmpresa.push(data[ii].Empresas.Sector);
+                }
+
+                var mytotalIncomeChart = new Chart(Grafico3, {
+                    type: 'bar',
+                    data: {
+                        labels: EmpresasEnProceso,
+                        datasets: [{
+                            label: "Asuntos",
+                            backgroundColor: '#ADFF2F',
+                            borderColor: 'rgb(23, 125, 255)',
+                            data: AsuntosPorEmpresa,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false,
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    display: false,
+                                    min: 0
+                                },
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }]
+                        },
+                    }
+                });
+            },
+            complete: function () {
+                $('#EsperaGrafico3').hide();
+            },
+            error: function (errormessage) {
+                //swal({
+                //    title: 'GAM ASAE',
+                //    text: 'Ha habido un error al intentar procesar los datos',
+                //    icon: 'error',
+                //    buttons: {
+                //        confirm: {
+                //            className: 'btn btn-error'
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+
+    function AsuntosPorEmpresaEstado1_2() {
+        $.ajax({
+            url: "/Home/AsuntosPorEmpresaGeneralPorEstado1_2/",
+            data: { idconfiguracion: $('#IdConfiguracion').val() },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#EsperaGrafico4').show();
+            },
+            success: function (data) {
+
+                var EmpresasEnProceso = [];
+                for (var i = 0; i < data.length; i++) {
+                    EmpresasEnProceso.push(data[i].Empresas.Nombre.substring(0, 6));
+                }
+
+                var AsuntosPorEmpresa = [];
+                for (var ii = 0; ii < data.length; ii++) {
+                    AsuntosPorEmpresa.push(data[ii].Empresas.Sector);
+                }
+
+                var mytotalIncomeChart = new Chart(Grafico4, {
+                    type: 'bar',
+                    data: {
+                        labels: EmpresasEnProceso,
+                        datasets: [{
+                            label: "Asuntos",
+                            backgroundColor: '#FFFF00',
+                            borderColor: 'rgb(23, 125, 255)',
+                            data: AsuntosPorEmpresa,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false,
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    display: false,
+                                    min: 0
+                                },
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }]
+                        },
+                    }
+                });
+            },
+            complete: function () {
+                $('#EsperaGrafico4').hide();
+            },
+            error: function (xhr, status, error) {
+                //console.log(status + ', ' + error);
+                var messageError = xhr.status + ' : ' + xhr.statusText;
+                //swal({
+                //    title: 'GAM ASAE',
+                //    text: 'Ha habido un error al intentar procesar los datos Estado1_2, ' + messageError,
+                //    icon: 'error',
+                //    buttons: {
+                //        confirm: {
+                //            className: 'btn btn-error'
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+
+    function AsuntosPorEmpresaEstado1_3() {
+        $.ajax({
+            url: "/Home/AsuntosPorEmpresaGeneralPorEstado1_3/",
+            data: { idconfiguracion: $('#IdConfiguracion').val() },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#EsperaGrafico5').show();
+            },
+            success: function (data) {
+
+                var EmpresasEnProceso = [];
+                for (var i = 0; i < data.length; i++) {
+                    EmpresasEnProceso.push(data[i].Empresas.Nombre.substring(0, 6));
+                }
+
+                var AsuntosPorEmpresa = [];
+                for (var ii = 0; ii < data.length; ii++) {
+                    AsuntosPorEmpresa.push(data[ii].Empresas.Sector);
+                }
+
+                var mytotalIncomeChart = new Chart(Grafico5, {
+                    type: 'bar',
+                    data: {
+                        labels: EmpresasEnProceso,
+                        datasets: [{
+                            label: "Asuntos",
+                            backgroundColor: '#ffa500',
+                            borderColor: 'rgb(23, 125, 255)',
+                            data: AsuntosPorEmpresa,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false,
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    display: false,
+                                    min: 0
+                                },
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }]
+                        },
+                    }
+                });
+            },
+            complete: function () {
+                $('#EsperaGrafico5').hide();
+            },
+            error: function (errormessage) {
+                //swal({
+                //    title: 'GAM ASAE',
+                //    text: 'Ha habido un error al intentar procesar los datos Estado1_2',
+                //    icon: 'error',
+                //    buttons: {
+                //        confirm: {
+                //            className: 'btn btn-error'
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+
+    function AsuntosPorEmpresaEstado1_4() {
+        $.ajax({
+            url: "/Home/AsuntosPorEmpresaGeneralPorEstado1_4/",
+            data: { idconfiguracion: $('#IdConfiguracion').val() },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#EsperaGrafico6').show();
+            },
+            success: function (data) {
+
+                var EmpresasEnProceso = [];
+                for (var i = 0; i < data.length; i++) {
+                    EmpresasEnProceso.push(data[i].Empresas.Nombre.substring(0, 6));
+                }
+
+                var AsuntosPorEmpresa = [];
+                for (var ii = 0; ii < data.length; ii++) {
+                    AsuntosPorEmpresa.push(data[ii].Empresas.Sector);
+                }
+
+                var mytotalIncomeChart = new Chart(Grafico6, {
+                    type: 'bar',
+                    data: {
+                        labels: EmpresasEnProceso,
+                        datasets: [{
+                            label: "Asuntos",
+                            backgroundColor: '#FF0000',
+                            borderColor: 'rgb(23, 125, 255)',
+                            data: AsuntosPorEmpresa,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false,
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    display: false,
+                                    min: 0
+                                },
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }]
+                        },
+                    }
+                });
+            },
+            complete: function () {
+                $('#EsperaGrafico6').hide();
+            },
+            error: function (errormessage) {
+                //swal({
+                //    title: 'GAM ASAE',
+                //    text: 'Ha habido un error al intentar procesar los datos Estado1_2',
+                //    icon: 'error',
+                //    buttons: {
+                //        confirm: {
+                //            className: 'btn btn-error'
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+    /*
+function AsuntosPorEmpresaEstado2() {
+    $.ajax({
+        url: "/Home/AsuntosPorEmpresaGeneralPorEstado/",
+        data: { estado: '2', idconfiguracion: $('#IdConfiguracion').val() },
+        type: "GET",
+        contentType: "application/json",
+        dataType: "json",
+        beforeSend: function () {
+            $('#EsperaGrafico7').show();
+        },
+        success: function (data) {
+
+            var lista1 = [];
+            var EmpresasEnProceso = [];
+            for (var i = 0; i < data.length; i++) {
+                EmpresasEnProceso.push(data[i].Empresas.Nombre.substring(0, 6));
+            }
+
+            var AsuntosPorEmpresa = [];
+            for (var ii = 0; ii < data.length; ii++) {
+                AsuntosPorEmpresa.push(data[ii].Empresas.Sector);
+            }
+
+            var mytotalIncomeChart = new Chart(Grafico7, {
+                type: 'bar',
+                data: {
+                    labels: EmpresasEnProceso,
+                    datasets: [{
+                        label: "Asuntos",
+                        backgroundColor: '#FF7F50',
+                        borderColor: 'rgb(23, 125, 255)',
+                        data: AsuntosPorEmpresa,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                display: false,
+                                min: 0
+                            },
+                            gridLines: {
+                                drawBorder: false,
+                                display: false
+                            }
+                        }],
+                        xAxes: [{
+                            gridLines: {
+                                drawBorder: false,
+                                display: false
+                            }
+                        }]
+                    },
+                }
+            });
+        },
+        complete: function () {
+            $('#EsperaGrafico7').hide();
+        },
+        error: function (errormessage) {
+            //swal({
+            //    title: 'GAM ASAE',
+            //    text: 'Ha habido un error al intentar procesar los datos',
+            //    icon: 'error',
+            //    buttons: {
+            //        confirm: {
+            //            className: 'btn btn-error'
+            //        }
+            //    }
+            //});
+        }
+    });
+}
+*/
+    function AsuntosPorEmpresaEstado6() {
+        $.ajax({
+            url: "/Home/AsuntosPorEmpresaGeneralPorEstado/",
+            data: { estado: '6', idconfiguracion: $('#IdConfiguracion').val() },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#EsperaGrafico8').show();
+            },
+            success: function (data) {
+
+                var lista1 = [];
+                var EmpresasEnProceso = [];
+                for (var i = 0; i < data.length; i++) {
+                    EmpresasEnProceso.push(data[i].Empresas.Nombre.substring(0, 6));
+                }
+
+                var AsuntosPorEmpresa = [];
+                for (var ii = 0; ii < data.length; ii++) {
+                    AsuntosPorEmpresa.push(data[ii].Empresas.Sector);
+                }
+
+                var mytotalIncomeChart = new Chart(Grafico8, {
+                    type: 'bar',
+                    data: {
+                        labels: EmpresasEnProceso,
+                        datasets: [{
+                            label: "Asuntos",
+                            backgroundColor: '#bdb76b',
+                            borderColor: 'rgb(23, 125, 255)',
+                            data: AsuntosPorEmpresa,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false,
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    display: false,
+                                    min: 0
+                                },
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }]
+                        },
+                    }
+                });
+            },
+            complete: function () {
+                $('#EsperaGrafico8').hide();
+            },
+            error: function (errormessage) {
+                //swal({
+                //    title: 'GAM ASAE',
+                //    text: 'Ha habido un error al intentar procesar los datos',
+                //    icon: 'error',
+                //    buttons: {
+                //        confirm: {
+                //            className: 'btn btn-error'
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+    /*
+        function AsuntosPorEmpresaEstado7() {
+            $.ajax({
+                url: "/Home/AsuntosPorEmpresaGeneralPorEstado/",
+                data: { estado: '7', idconfiguracion: $('#IdConfiguracion').val() },
+                type: "GET",
+                contentType: "application/json",
+                dataType: "json",
+                beforeSend: function () {
+                    $('#EsperaGrafico9').show();
+                },
+                success: function (data) {
+
+                    var EmpresasEnProceso = [];
+                    for (var i = 0; i < data.length; i++) {
+                        EmpresasEnProceso.push(data[i].Empresas.Nombre.substring(0, 6));
+                    }
+
+                    var AsuntosPorEmpresa = [];
+                    for (var ii = 0; ii < data.length; ii++) {
+                        AsuntosPorEmpresa.push(data[ii].Empresas.Sector);
+                    }
+
+                    var mytotalIncomeChart = new Chart(Grafico9, {
+                        type: 'bar',
+                        data: {
+                            labels: EmpresasEnProceso,
+                            datasets: [{
+                                label: "Asuntos",
+                                backgroundColor: '#FF1493',
+                                borderColor: 'rgb(23, 125, 255)',
+                                data: AsuntosPorEmpresa,
+                            }],
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            legend: {
+                                display: false,
+                            },
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        display: false,
+                                        min: 0
+                                    },
+                                    gridLines: {
+                                        drawBorder: false,
+                                        display: false
+                                    }
+                                }],
+                                xAxes: [{
+                                    gridLines: {
+                                        drawBorder: false,
+                                        display: false
+                                    }
+                                }]
+                            },
+                        }
+                    });
+                },
+                complete: function () {
+                    $('#EsperaGrafico9').hide();
+                },
+                error: function (errormessage) {
+                    //swal({
+                    //    title: 'GAM ASAE',
+                    //    text: 'Ha habido un error al intentar procesar los datos',
+                    //    icon: 'error',
+                    //    buttons: {
+                    //        confirm: {
+                    //            className: 'btn btn-error'
+                    //        }
+                    //    }
+                    //});
+                }
+            });
+        }
+            */
+    function AsuntosPorClasificacion() {
+        $.ajax({
+            url: "/Home/Clasificaciones/",
+            data: { idconfiguracion: $('#IdConfiguracion').val() },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#EsperaGrafico10').show();
+            },
+            success: function (data) {
+
+                var Conteo = [];
+                for (var i = 0; i < data.length; i++) {
+                    Conteo.push(data[i].Id);
+                }
+
+                var Clasificaciones = [];
+                for (var ii = 0; ii < data.length; ii++) {
+                    Clasificaciones.push(data[ii].Nombre);
+                }
+
+                var barChart = document.getElementById('Grafico10').getContext('2d');
+
+                var mytotalIncomeChart = new Chart(barChart, {
+                    type: 'bar',
+                    data: {
+                        labels: Clasificaciones,
+                        datasets: [{
+                            label: "Clasificación",
+                            backgroundColor: '#5ac18e',
+                            borderColor: 'rgb(23, 125, 255)',
+                            data: Conteo
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false,
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    display: false,
+                                    min: 0
+                                },
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }],
+                            xAxes: [{
+                                gridLines: {
+                                    drawBorder: false,
+                                    display: false
+                                }
+                            }]
+                        },
+                    }
+                });
+            },
+            complete: function () {
+                $('#EsperaGrafico10').hide();
+            },
+            error: function (errormessage) {
+                //swal({
+                //    title: 'GAM ASAE',
+                //    text: 'Ha habido un error al intentar procesar los datos',
+                //    icon: 'error',
+                //    buttons: {
+                //        confirm: {
+                //            className: 'btn btn-error'
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+
+    function AsuntosARepetirse6Meses() {
+        $.ajax({
+            url: "/Home/AsuntosARepetir",
+            data: { repetir: 1 },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#Espera').show();
+            },
+            success: function (data) {
+
+                Circles.create({
+                    id: 'circles-6m',
+                    radius: 45,
+                    value: 10,
+                    maxValue: 1000,
+                    width: 7,
+                    text: data,
+                    colors: ['#f1f1f1', '#FF9E27'],
+                    duration: 400,
+                    wrpClass: 'circles-wrp',
+                    textClass: 'circles-text',
+                    styleWrapper: true,
+                    styleText: true
+                })
+            },
+            complete: function () {
+                $('#Espera').hide();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
+
+    function AsuntosARepetirse1Año() {
+        $.ajax({
+            url: "/Home/AsuntosARepetir",
+            data: { repetir: 2 },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#Espera').show();
+            },
+            success: function (data) {
+
+                Circles.create({
+                    id: 'circles-1a',
+                    radius: 45,
+                    value: 10,
+                    maxValue: 1000,
+                    width: 7,
+                    text: data,
+                    colors: ['#f1f1f1', '#2BB930'],
+                    duration: 400,
+                    wrpClass: 'circles-wrp',
+                    textClass: 'circles-text',
+                    styleWrapper: true,
+                    styleText: true
+                })
+            },
+            complete: function () {
+                $('#Espera').hide();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
+
+    function AsuntosARepetirse2Años() {
+        $.ajax({
+            url: "/Home/AsuntosARepetir",
+            data: { repetir: 3 },
+            type: "GET",
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#Espera').show();
+            },
+            success: function (data) {
+
+                Circles.create({
+                    id: 'circles-2a',
+                    radius: 45,
+                    value: 10,
+                    maxValue: 1000,
+                    width: 7,
+                    text: data,
+                    colors: ['#f1f1f1', '#F25961'],
+                    duration: 400,
+                    wrpClass: 'circles-wrp',
+                    textClass: 'circles-text',
+                    styleWrapper: true,
+                    styleText: true
+                })
+
+            },
+            complete: function () {
+                $('#Espera').hide();
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
+
+</script>
+
+<input type="hidden" id="IdConfiguracion" name="IdConfiguracion" value="@((Session["GranSesion"] as GAM.Models.Models.UsuariosRoles).Configuracion.Id)" />
+
+<div class="panel-header bg-primary-gradient">
+    <div class="page-inner py-5">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+            <div>
+                <h2 class="text-white pb-2 fw-bold">@GAM.Utilerias.Titulos.TDashboard(Session["IdConfiguracion"].ToString())</h2>
+            </div>
+            <div class="ml-md-auto py-2 py-md-0"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Contenido aquí -->
+@if (Session["IdConfiguracion"].ToString() == "3")
+{
+    <div class="page-inner mt--5">
+
+        <div class="row mt--2">
+            <div class="col-md-6">
+                <div class="card full-height">
+
+                    <div id="EsperaGrafico1" class="card-body is-loading is-loading-lg">
+                        Card content
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="card-body">
+
+                            <div class="card-title">@GAM.Utilerias.Titulos.Oportunidades(Session["IdConfiguracion"].ToString(), "P") por @GAM.Utilerias.Titulos.Empresa(Session["IdConfiguracion"].ToString(), "S")</div>
+
+                            <a href="/Home/TemasEmpresas">
+                                <div class="row py-3">
+                                    <div class="col-md-12">
+                                        <div id="chart-container">
+                                            <canvas id="Grafico1"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card full-height">
+
+                    <div id="EsperaGrafico6" class="card-body is-loading is-loading-lg">
+                        Card content
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="card-title">@GAM.Utilerias.Titulos.Oportunidades(Session["IdConfiguracion"].ToString(), "P") Vencidos</div>
+
+                        <a href="/Home/TemasDetalleEmpresas14">
+                            <div class="row py-3">
+                                <div class="col-md-12">
+                                    <div id="chart-container">
+                                        <canvas id="Grafico6"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt--2">
+
+            <div class="col-md-6">
+                <div class="card full-height">
+
+                    <div id="EsperaGrafico5" class="card-body is-loading is-loading-lg">
+                        Card content
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="card-title">@GAM.Utilerias.Titulos.Oportunidades(Session["IdConfiguracion"].ToString(), "P") Por Vencer en 30 días</div>
+                        <a href="/Home/TemasDetalleEmpresas13">
+                            <div class="row py-3">
+                                <div class="col-md-12">
+                                    <div id="chart-container">
+                                        <canvas id="Grafico5"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card full-height">
+
+                    <div id="EsperaGrafico4" class="card-body is-loading is-loading-lg">
+                        Card content
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="card-title">@GAM.Utilerias.Titulos.Oportunidades(Session["IdConfiguracion"].ToString(), "P") Por Vencer en 60 días</div>
+                        <a href="/Home/TemasDetalleEmpresas12">
+                            <div class="row py-3">
+                                <div class="col-md-12">
+                                    <div id="chart-container">
+                                        <canvas id="Grafico4"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+}
+
+
+<!-- Chart JS -->
+<script src="../assets/js/plugin/chart.js/chart.min.js"></script>
+
+<!-- jQuery Sparkline -->
+<script src="../assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+<!-- Chart Circle -->
+<script src="../assets/js/plugin/chart-circle/circles.min.js"></script>
+
+
+

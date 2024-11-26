@@ -1,0 +1,183 @@
+﻿@model IEnumerable < GAM.Models.Models.Roles>
+@{
+    ViewBag.Title = "Roles";
+}
+
+<script>
+
+    $(document).ready(function () {
+        $('#opcAdmin').addClass("nav-item active submenu");
+        $('#admin').addClass("collapse show");
+        $('#sopcRoles').addClass("active");
+    });
+
+    function Guardar() {
+        $.ajax({
+            type: "GET",
+            url: "/Administracion/AgregarRol/",
+            data: { aNombre: $('#aNombre').val(), aActivo: $('#aActivo').val() },
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+                var len = data.length;
+                if (len > 0) {
+                    swal({
+                        title: 'GAM ASAE',
+                        text: 'Se guardó el nuevo registro',
+                        icon: 'success',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-success'
+                            }
+                        }
+                    });
+
+                    // Cargar de nuevo los datos
+                    $('#basic-datatables').empty();
+                    for (var i = 0; i < len; i++) {
+                        var row = '<tr>' +
+                            '<td>' + data[i].Nombre + '</td>' +
+                            '<td>' + data[i].Observaciones + '</td>' +
+                            '<td>' + data[i].Activo + '</td>' +
+                            //'<td><a href=# onclick=ObtenerPorId(' + data[i].Id + ');>Modificar</a></td>' +
+                            '</tr > ';
+                        $('#basic-datatables').append(row);
+                    }
+                }
+                else {
+                    swal({
+                        title: 'GAM ASAE',
+                        text: 'Ha habido un error al intentar procesar los datos',
+                        icon: 'error',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-error'
+                            }
+                        }
+                    });
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            }
+        });
+    }
+
+</script>
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Roles</h4>
+    </div>
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="card">
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="col-md-6 col-lg-4">
+
+                                <div class="form-group form-inline">
+                                    <label for="aNombre" class="col-md-3 col-form-label fc-left">Nombre</label>
+                                    <div class="col-md-9 p-0">
+                                        <input type="text" class="form-control form-control-sm input-solid" name="aNombre" id="aNombre" placeholder="" required tabindex="1">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6 col-lg-4">
+
+                                <div class="form-group form-inline">
+                                    <label for="aObservaciones" class="col-md-4 col-form-label fc-left">Observaciones</label>
+                                    <div class="col-md-7 p-0">
+                                        <input type="text" class="form-control form-control-sm input-solid" name="aObservaciones" id="aObservaciones" placeholder="" required tabindex="1">
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="col-md-6 col-lg-4">
+                                
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" id="aActivo" name="aActivo">
+                                        <span class="form-check-sign">Activo</span>
+                                    </label>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="card-action label-align-center">
+                        <button type="submit" class="btn btn-success animated bounceInDown" onclick="Guardar();">Guardar</button>
+                    </div>
+
+                <div class="table-responsive">
+                    <table id="basic-datatables" class="display compact table-striped table-hover" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Observaciones</th>
+                                <th>Activo</th>
+                                <!--th></th-->
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model == null)
+                            {
+                                <tr><td colspan="3" align="center"></td></tr>
+                            }
+                            @foreach (GAM.Models.Models.Roles items in Model)
+                            {
+                                var mensaje = items.Activo == true ? "Activo" : "Inactivo";
+                                <tr data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Da click para ver el detalle">
+                                    <td>@items.Nombre</td>
+                                    <td>@items.Observaciones</td>
+                                    <td>@mensaje</td>
+                                     <!--td>< a href="#" onclick="ModalModificar(@items.Id);">Detalle</a></td-->
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <script type="text/javascript">
+                    $(function () {
+                        var msg = '@ViewData["Mensaje"]';
+                        if (msg == 'Agregado') {
+                            Mensajes('Exitoso', 'Se guardó el nuevo registro', 2);
+                        }
+                        else if (msg == 'Modificado') {
+                            Mensajes('Exitoso', 'Se guardó el registro modificado', 2);
+                        }
+                        else if (msg == 'Falla') {
+                            Mensajes('Atención', 'No se guardaron los datos, revise su información', 4);
+                        }
+                        else {
+
+                        }
+                    });
+                </script>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>

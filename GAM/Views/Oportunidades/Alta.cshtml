@@ -1,0 +1,396 @@
+﻿
+@{
+    ViewBag.Title = "Alta";
+}
+
+<script>
+    $(document).ready(function () {
+        $('#opcOport').addClass("nav-item active submenu");
+        //$('#oport').addClass("collapse show");
+        //$('#sopcOport').addClass("active");
+
+        var now = new Date();
+
+        var dia = ("0" + now.getDate()).slice(-2);
+        var mes = ("0" + (now.getMonth() + 1)).slice(-2);
+
+        var hoy = (dia) + "/" + (mes) + "/" + now.getFullYear();
+        //console.log(hoy);
+        $('#Cierre').val(hoy);
+        
+    });
+    
+    function Guardar() {
+
+        if ($('#Nombre').val() == '') {
+            swal({
+                text: 'Agregue el nombre del asunto',
+                icon: 'warning',
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-warning'
+                    }
+                }
+            });
+            return;
+        }
+        if ($('#Empresa').val() == '')
+        {
+            swal({
+                text: 'Seleccione la empresa a la que pertenecerá el asunto',
+                icon: 'warning',
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-warning'
+                    }
+                }
+            });
+            return;
+        }
+
+        if ($('#Caracteristicas').val() == '') {
+            swal({
+                text: 'Escriba descripción del asunto',
+                icon: 'warning',
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-warning'
+                    }
+                }
+            });
+            return;
+        }
+
+        if ($('#PalabrasClave').val() == '') {
+            swal({
+                text: 'Escriba una palabra clave que se relacione con el asunto',
+                icon: 'warning',
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-warning'
+                    }
+                }
+            });
+            return;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "/Oportunidades/Agregar/",
+            data: {
+                Nombre: $('#Nombre').val(),
+                Cierre: $('#Cierre').val(),
+                Caracteristicas: $('#Caracteristicas').val(),
+                Empresa: $('#Empresa').val(),
+                IdUsuario: $('#IdUsuario').val(),
+                idconfiguracion: $('#IdConfiguracion').val(),
+                PalabrasClave: $('#PalabrasClave').val()
+            },
+            contentType: "application/json",
+            dataType: "json",
+            beforeSend: function () {
+                $('#Espera').show();
+            },
+            success: function (data) {
+                
+                if (data > 0) {
+                    swal({
+                        text: 'Se guardó el registro',
+                        icon: 'success',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-success'
+                            }
+                        }
+                    }).then(
+                        function () {
+                            location.href = '/Oportunidades/Edicion?Id='+ data;
+                        });
+                }
+                else {
+                    swal({
+                        title: 'GAM ASAE',
+                        text: 'No se guardó el registro, revise sus datos',
+                        icon: 'warning',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-warning'
+                            }
+                        }
+                    });
+                }
+                
+                /*
+                swal({
+                    title: 'Los datos se han guardado exitosamente',
+                    text: "¿Desea agregar los Responsables?",
+                    type: 'warning',
+                    buttons: {
+                        confirm: {
+                            text: 'Si, ir a agregarlos!',
+                            className: 'btn btn-success'
+                        },
+                        cancel: {
+                            visible: true,
+                            className: 'btn btn-warning',
+                            text: 'Agregarlos después'
+                        }
+                    }
+                }).then((Delete) => {
+                    if (Delete) {
+                        location.href = '/Oportunidades/Responsables?Id=' + data;
+                    } else {
+                        swal.close();
+                        location.href = '/Oportunidades/Index';
+                    }
+                });
+
+                */
+
+
+            },
+            complete: function () {
+                $('#Espera').hide();
+            },
+            error: function (errormessage) {
+                //swal({
+                //    title: 'GAM ASAE',
+                //    text: 'Ha habido un error al intentar procesar los datos',
+                //    icon: 'error',
+                //    buttons: {
+                //        confirm: {
+                //            className: 'btn btn-error'
+                //        }
+                //    }
+                //});
+            }
+        });
+    }
+
+</script>
+
+<input type="hidden" id="IdUsuario" name="IdUsuario" value="@((Session["GranSesion"] as GAM.Models.Models.UsuariosRoles).Usuarios.Id)" />
+<input type="hidden" id="IdConfiguracion" name="IdConfiguracion" value="@((Session["GranSesion"] as GAM.Models.Models.UsuariosRoles).Configuracion.Id)" />
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Crear @GAM.Utilerias.Titulos.Oportunidades(Session["IdConfiguracion"].ToString(), "S")</h4>
+    </div>
+    <div class="row">
+
+        <div id="Espera" style="display:none; width:69px;height:90px;position:absolute;top:20%;left:50%;padding:2px;z-index:1000">
+            <img src="../assets/img/spinner.gif" width="64" height="64" /><br />Cargando...
+        </div>
+
+        <div class="col-md-12">
+            <div class="card">
+
+                <div class="card-body">
+
+                    <div class="separator">
+                        <label><b>Ingrese en los campos</b></label>
+                        <p></p>
+                    </div>
+
+                    <!--Estilo 1-->
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Asunto</span>
+                                    </div>
+                                    <input type="text" id="Nombre" class="form-control" aria-label="Asunto" required autocomplete="off" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Empresa</span>
+                                    </div>
+                                    <select id="Empresa" class="form-control" required>
+                                        <option value="">&nbsp;</option>
+                                        @foreach (var item in GAM.Models.Catalogos.Seleccionar("empresas"))
+                                        {
+                                            <option value="@item.Id">@item.Nombre</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Vencimiento</span>
+                                    </div>
+                                    <input type="text" id="Cierre" class="form-control" aria-label="Vencimiento" required />
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Descripción</span>
+                                    </div>
+                                    <textarea id="Caracteristicas" class="form-control" aria-label="Descripción" required></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                       
+                        <div class="col-md-12">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Palabras Clave</span>
+                                    </div>
+                                    <input type="text" id="PalabrasClave" class="form-control" aria-label="Palabras Clave" required />
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+ 
+                    <!--
+                    <hr />
+
+
+
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group form-inline">
+                                <label for="Nombre" class="col-md-2 form-label">Asunto</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control form-control-sm input-solid" id="Nombre" name="Nombre" placeholder="" required tabindex="1" autocomplete="off" style="width:85%">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div id="Formulario" class="row">
+
+                        <div class="col-md-1"></div>
+
+                        <div class="col-md-4">
+
+                            <div class="form-group form-inline">
+                                <label for="Empresa" class="col-md-3 form-label">Empresa</label>
+                                <div class="col-md-4">
+                                    <select name="Empresa" id="Empresa" class="form-control form-control-sm input-solid" tabindex="2" required style="width: 230px">
+                                        <option></option>
+                                        @foreach (var item in GAM.Models.Catalogos.Seleccionar("empresas"))
+                                        {
+                                            <option value="@item.Id">@item.Nombre</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group form-inline">
+                                <label for="Cierre" class="col-md-3 form-label">Vencimiento</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control form-control-sm input-solid" id="Cierre" name="Cierre" required tabindex="3">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group form-inline">
+                                <label for="Caracteristicas" class="col-md-2 form-label">Descripción</label>
+                                <div class="col-md-10">
+                                    <textarea rows="3" cols="18" class="form-control form-control-sm input-solid" id="Caracteristicas" name="Caracteristicas" tabindex="4" required autocomplete="off" style="width:85%"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            <div class="form-group form-inline">
+                                <label for="PalabrasClave" class="col-md-2 form-label">Palabras Clave</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control form-control-sm input-solid" id="PalabrasClave" name="PalabrasClave" required tabindex="5" style="width:85%">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4"></div>
+
+                    </div>
+
+                    -->
+                    <div class="card-action label-align-center">
+
+                        <button id="BtnGuardar" class="btn btn-success animated bounceInDown" onclick="Guardar();">Guardar</button>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+<!--Datetime picker -->
+<script src="../assets/js/plugin/datetimepicker/moment.js"></script>
+<script src="../assets/js/plugin/datetimepicker/datetimepicker.js"></script>
+
+<script>
+
+    $('#Cierre').datetimepicker({
+        format: 'DD/MM/YYYY',
+    });
+
+</script>

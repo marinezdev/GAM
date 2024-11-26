@@ -1,0 +1,4 @@
+﻿CREATE FULLTEXT CATALOG [busqueda_oportunidades]
+    WITH ACCENT_SENSITIVITY = ON
+    AUTHORIZATION [dbo];
+

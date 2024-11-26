@@ -1,0 +1,1149 @@
+﻿
+@{
+    ViewBag.Title = "AgregarArchivo";
+
+    var idoportunidad = Session["IdOportunidad"].ToString(); //variable para el control de filtros
+}
+
+<input type="hidden" id="IdOportunidad" name="IdOportunidad" value="@Session["IdOportunidad"].ToString()" />
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Archivos/Documentos</h4>
+    </div>
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="card">
+
+                <div class="card-header">
+                    <h4 class="card-title">@Html.Raw(Session["NombreTema"])</h4>
+                </div>
+
+                <div id="Espera" class="is-loading is-loading-lg">
+                    <h4>Card content</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <!--Menu-->
+                        @if (Session["IdConfiguracion"].ToString() == "2")
+                        {
+                            @Html.Partial("_MenuEdicionOportunidades")
+                        }
+                        else if (Session["IdConfiguracion"].ToString() == "3")
+                        {
+                            @Html.Partial("_MenuEdicionOportunidadesSABE")
+                        }
+
+                    </div>
+
+                    <br />
+
+                    <div class="alert alert-info" role="alert">
+                        Agregue Archivos/Documentos relacionados con este asunto
+                    </div>
+
+                    <!--INICIO OPTIONS CREAR Y ELIMANR CLASIFICACIONES-->
+                    <div class="container" align="center">
+
+                        <div class="row">
+                            <div class="col">
+
+                                <label class="row col-md-3 col-form-label fw-bold">Clasificación</label>
+
+                                <select class="form-control form-control-sm input-solid" id="clasificacion" name="clasificacion" style="width: 180px" onchange="ClasificacionSeleccionada();">
+
+                                    <option value="0">Seleccionar </option>
+                                    @foreach (var clas in GAM.Models.Catalogos.ListarClas("DocumentosASAEClasificacion", @Request["IdE"]))
+                                    {
+                                        <option value="@clas.Id">@clas.Nombre</option>
+                                    }
+                                </select>
+
+                                <div class="col-md-4 text-center "><a id="ListaClasificaciones" href="#" onclick="AdministrarClasificaciones(@Request["IdE"]);">Crear Clasificación</a></div>
+
+                            </div>
+
+                            <div class="col">
+                                <label class="row col-md-3 col-form-label fw-bold">SubClasificación</label>
+                                <select class="form-control form-control-sm input-solid" id="subclasificacion" name="subclasificacion" style="width: 180px">
+                                    <option value="0">Seleccionar </option>
+                                </select>
+                                <div class="col-md-4 text-center"><a id="ListaSubClasificaciones" href="#" onclick="AdministrarSubClasificaciones()">Crear SubClasificación</a></div>
+                            </div>
+                        </div>
+
+                        <br />
+                        <br />
+
+                        <div>
+
+
+                            <div class="row">
+
+                                <div class="col-md-12 text-center">
+                                    <div class="input-group" style="margin-left: 20%">
+
+                                        <div class="form-group form-inline">
+
+                                            <input type="file" id="ArchivoASubir" class="form-control" /> <br />
+
+                                            <input type="hidden" id="OportunidadId" value="@Session["IdOportunidad"].ToString()" />
+
+                                            <button id="SubirArchivo" class="btn btn-success" onclick="SubirArchivo();">Subir Archivo</button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- INICIO MODAL Administrar clasificaciones -->
+                    <div class="modal fade" id="ModalClasificaciones" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title" id="ModalLabel1">Agregar/Eliminar Clasificaciones</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+
+                                            <div class="col-md-8 col-lg-8">
+                                                <div class="form-group form-inline">
+                                                    <label for="aClasificacion" class="col-md-3 col-form-label">Nombre</label>
+                                                    <div class="col-md-9 col-lg-9">
+                                                        <input type="text" class="form-control form-control-sm input-solid" id="aClasificacion" required autocomplete="off">
+                                                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="AgregarClasificacion(@Request["IdE"]);">Agregar</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+
+                                            <table id="catalogos" class="display compact" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="1%">Id</th>
+                                                        <th width="60%">Nombre</th>
+                                                        <th width="3%" align="center"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <!--INICIO Administrar subclasificaciones -->
+                    <div class="modal fade" id="ModalSubClasificaciones" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title" id="ModalLabel1">Agregar/Eliminar SubClasificaciones</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+
+                                            <div class="col-md-6">
+                                                <div class="form-group form-inline">
+                                                    <label for="aSubClasificacion" class="col-md-3 col-form-label">Nombre</label>
+                                                    <div class="col-md-9 col-lg-9">
+                                                        <input type="text" class="form-control form-control-sm input-solid" id="aSubClasificacion" required autocomplete="off">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+
+                                                <div class="form-group form-inline">
+                                                    <label for="aClasificacion" class="col-md-3 col-form-label">Nombre</label>
+                                                    <div class="col-md-9 col-lg-9">
+
+                                                        <select class="form-control form-control-sm input-solid" id="aaclasificacion" name="aaclasificacion" style="width: 180px">
+                                                            <option value="0">Seleccionar </option>
+                                                            @foreach (var clas in GAM.Models.Catalogos.ListarClas("DocumentosASAEClasificacion", @Request["IdE"]))
+                                                            {
+                                                                <option value="@clas.Id">@clas.Nombre</option>
+                                                            }
+                                                        </select>
+
+                                                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="AgregarSubClasificacion(@Request["IdE"]);">Agregar</button>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+
+                                      
+                                    </div>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="card-body">
+
+                        <!------INICIO TARJETA CLASIFICACIONES------->
+                        <div class="card">
+
+                            <div class="card-body">
+
+                                <div class="tab-pane fade active show" id="v-pills-home-icons" role="tabpanel" aria-labelledby="v-pills-home-tab-icons" style="width: 90%">
+                                    <div class="accordion accordion-secondary">
+
+                                        @foreach (var items in GAM.Models.Catalogos.ListarClas("DocumentosASAEClasificacion",@Request["IdE"]))
+                                        {
+
+                                            var encabezado = "heading" + items.Id;
+                                            var colapso = "colapso" + items.Id;
+                                            var gcolapso = "#colapso" + items.Id;
+
+                                            <div class="card">
+                                                <div class="card-header collapsed" id="@encabezado" data-toggle="collapse" data-target="@gcolapso" aria-expanded="false" aria-controls="@colapso" role="button">
+                                                    <div class="span-icon">
+                                                        <div class="fas fa-folder text-warning"></div>
+                                                    </div>
+                                                    <div class="span-title text-dark fw-bold">
+                                                        @items.Nombre
+                                                    </div>
+                                                    <div class="span-mode text-dark"></div>
+                                                </div>
+
+                                                <div id="@colapso" class="collapse" aria-labelledby="@encabezado" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <!--INICIO TABLA CLASIFCACIONES-->
+                                                        @if (GAM.Models.Catalogos.SeleccionarClasificacionesDocumentos3(items.Id.ToString()).Count() > 0)
+                                                        {
+
+                                                            <table id="Tclasificacion" class="table table-striped table-hover table-bordered table-head-bg-warning table-responsive-lg" width="100%">
+                                                                <thead class="table-active">
+                                                                    <tr>
+                                                                        <th>Nombre</th>
+                                                                        <th>Fecha</th>
+                                                                        <th>Notas</th>
+                                                                        <th width="2%">Modificar</th>
+                                                                        <th width="2%">Eliminar</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    @foreach (var datos in GAM.Models.Catalogos.SeleccionarClasificacionesDocumentos3(items.Id.ToString()))
+                                                                    {
+                                                                        if (datos.IdOportunidad == Int32.Parse(idoportunidad)) //OBTENER EL ID del proveedor DEL URL  y compararlo para mostrar datos relacionados
+                                                                        {
+                                                                            <tr>
+                                                                                <td><i class="fas fa-file text-info"></i>&nbsp;&nbsp;<a href="~/Archivos/@datos.Nombre" target="_blank">@datos.Nombre</a></td>
+                                                                                <td>@datos.Fecha</td>
+                                                                                <td>@datos.Notas</td>
+                                                                                <td style="font-size:20px;"><a href="#" onclick="SeleccionarPorId2(@datos.Id);">  <i class="fas fa-pen"></i></a></td>
+                                                                                <td style="font-size:20px;"><a href="#" onclick=" SeguroEliminarArchivo(@datos.Id);"><i class="fas fa-trash text-danger"></i></a></td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        }
+                                                        else
+                                                        {
+                                                            <label class="label label-align-center">No se han agregado documentos.</label>
+                                                        }
+                                                        <!--FIN TABLA CLASIFCACIONES-->
+                                                        @foreach (var itemss in GAM.Models.Catalogos.SeleccionarSubConsulta("DocumentosASAESubClasificacion", "IdClasificacion", items.Id.ToString()))
+                                                        {
+                                                            var encabezadoo = "headingg" + itemss.Id;
+                                                            var colapsoo = "colapsoo" + itemss.Id;
+                                                            var gcolapsoo = "#colapsoo" + itemss.Id;
+                                                            <div class="card">
+                                                                <div class="card-header collapsed" id="@encabezadoo" data-toggle="collapse" data-target="@gcolapsoo" aria-expanded="false" aria-controls="@colapsoo" role="button">
+                                                                    <div class="span-icon">
+                                                                        <div class="fas fa-folder text-primary"></div>
+                                                                    </div>
+                                                                    <div class="span-title text-dark">
+                                                                        @itemss.Nombre
+                                                                    </div>
+                                                                    <div class="span-mode text-dark"></div>
+                                                                </div>
+
+                                                                <div id="@colapsoo" class="collapse" aria-labelledby="@encabezadoo" data-parent="#accordion">
+                                                                    <div class="card-body" style="background-color: gainsboro">
+
+
+                                                                        <!--INICIO SUBCLASIFICACIONES-->
+                                                                        @if (GAM.Models.Catalogos.SeleccionarClasificacionSubClasificacionDocumentos3(items.Id.ToString(), itemss.Id.ToString()).Count() > 0)
+                                                                        {
+                                                                            <table id="TSubClasificacion" class="table table-striped table-hover table-bordered table-head-bg-primary table-responsive-lg">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Nombre</th>
+                                                                                        <th>Fecha</th>
+                                                                                        <th>Notas</th>
+                                                                                        <th width="3%">Modificar</th>
+                                                                                        <th width="3%">Eliminar</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    @foreach (var datoss in GAM.Models.Catalogos.SeleccionarClasificacionSubClasificacionDocumentos3(items.Id.ToString(), itemss.Id.ToString()))
+                                                                                    {
+
+                                                                                        if (datoss.IdOportunidad == Int32.Parse(idoportunidad)) //OBTENER EL ID del proveedor DEL URL  y compararlo para mostrar datos relacionados
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td><i class="fas fa-file text-info"></i>&nbsp;&nbsp;<a href="~/Archivos/@datoss.Nombre" target="_blank">@datoss.Nombre</a></td>
+                                                                                                <td>@datoss.Fecha</td>
+                                                                                                <td>@datoss.Notas</td>
+                                                                                                <td style="font-size:20px;"><a href="#" onclick="SeleccionarPorId(@datoss.Id);">  <i class="fas fa-pen"></i></a></td>
+                                                                                                <td style="font-size:20px;"><a href="#" onclick=" SeguroEliminarArchivo(@datoss.Id);"><i class="fas fa-trash text-danger"></i></a></td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    }
+                                                                                </tbody>
+                                                                            </table>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <label class="label label-align-center">No se han agregado documentos.</label>
+                                                                        }
+                                                                        <!--FIN SUB CLASIFICACIONES-->
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        }
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            @*</div>*@
+                            <!------FIN TARJETA CLASIFICACIONES---------->
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ModalNotas" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="ModalLabel">Editar Documento</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Notas</span>
+                                        </div>
+                                        <textarea id="Notas" class="form-control" aria-label="Notas" rows="5"></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+
+                                <label class="row col-md-3 col-form-label fw-bold">Clasificación</label>
+
+                                <select class="form-control form-control-sm input-solid" id="clasificacion2" name="clasificacion" style="width: 180px" onchange="ClasificacionSeleccionada2();">
+                                    <option value="0">Seleccionar </option>
+                                    @foreach (var clas in GAM.Models.Catalogos.ListarClas("DocumentosASAEClasificacion", @Request["IdE"]))
+                                    {
+                                        <option value="@clas.Id">@clas.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div id="selectSub" class="col" style="display:none" >
+                                <label class="row col-md-3 col-form-label fw-bold">SubClasificación</label>
+                                <select class="form-control form-control-sm input-solid" id="subclasificacion2" name="subclasificacion" style="width: 180px">
+                                    <option value="0">Seleccionar </option>
+                                    @foreach (var clas in GAM.Models.Catalogos.Seleccionarsub("DocumentosASAESubClasificacion"))
+                                    {
+                                        <option value="@clas.Id">@clas.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="IdArchivo" name="IdArchivo" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="AgregarNotas();">Aceptar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <script>
+            
+            $(document).ready(function () {
+                $('#Tclasificacion').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+                    }
+                });
+
+                $('#TSubClasificacion').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+                    }
+                });
+            });
+
+            $(document).ready(function () {
+
+                var obtenerParametrodeURL = function getUrlParameter(sParam) {
+                    var sPageURL = window.location.search.substring(1),
+                        sURLVariables = sPageURL.split('&'),
+                        sParameterName,
+                        i;
+
+                    for (i = 0; i < sURLVariables.length; i++) {
+                        sParameterName = sURLVariables[i].split('=');
+
+                        if (sParameterName[0] === sParam) {
+                            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                        }
+                    }
+                };
+
+                var idd = obtenerParametrodeURL('Id');
+
+                $('#opcOport').addClass("nav-item active submenu");
+                //$('#oport').addClass("collapse show");
+                //$('#sopcBusq').addClass("active");
+
+                $.fn.dataTable.moment("DD/MM/YYYY");
+
+                
+                $('#basic-datatables-').DataTable({
+                    colReorder: true,
+                    "pageLength": 20,
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                    },
+                    "scrollX": true,
+                    "order": [[1, "desc"]]
+                });
+                
+
+                //Inicialización de la tabla
+                $('#example').append('<caption style="caption-side: top"><h3>Archivos Agregados</h3></caption>');
+                $('#example').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                    },
+                    columns: [
+                        { data: 'Nombre' },
+                        { data: 'Fecha' },
+                        { data: 'Notas' }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            data: "Nombre",
+                            render: function (data) {
+                                return '<a href="/Archivos/' + data + '" target="_blank">' + data + '</a>';
+                                //return '<a href="#" onclick=AbrirPopUp("' + data + '");>' + data + '</a>';
+                            }
+                        }, {
+                            targets: [1],
+                            render: function (data) {
+                                var fecha = new Date(parseInt(data.substr(6)));
+                                var mes = (fecha.getMonth() + 1) < 10 ? '0' + (fecha.getMonth() + 1) : (fecha.getMonth() + 1);
+                                var fecha = fecha.getDate() + '/' + mes + '/' + fecha.getFullYear();
+                                return fecha;
+                            }
+                        }, {
+                            targets: [3],
+                            data: "Id",
+                            className: "text-center",
+                            render: function (data) {
+                                return '<a href="#" onclick="SeleccionarPorId(' + data + ');" class=text-primary><i class="fas fa-clipboard-list" data-toggle="tooltip" data-placement="left" title="Modificar"></i></a>';
+                            }
+                        }, {
+                            targets: [4],
+                            data: "Id",
+                            className: "text-center",
+                            render: function (data) {
+                                data = '<a href="#" onclick="SeguroEliminarArchivo(' + data + ');" class="text-danger"><i class="fas fa-trash" data-toggle="tooltip" data-placement="left" title="Eliminar"></i></a>';
+                                return data;
+                            }
+                        }
+                    ]
+                });
+
+                CargaInicial(idd);
+            });
+
+            //ayuda a estructurar nuestros datos dentro de la tabla
+            $(document).ready(function () {
+
+                $('#opcDocs').addClass("nav-item active submenu");
+                $('#Espera').hide();
+
+                $('#catalogos').DataTable({
+                    "searching": false,
+                    "paging": false,
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                    },
+                    info: false,
+                    columns: [
+                        { data: 'Id' },
+                        { data: 'Nombre' }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [2],
+                            data: "Id",
+                            render: function (data) {
+                                return '<a href="#" onclick=EliminarClasificacion(' + data + ');><i class="fas fa-trash text-danger"></i></a>';
+                            }
+                        }
+                    ]
+                });
+
+                ValidarSiUsuarioPuedeAgregarClasSubClas();
+
+            });
+
+            function AbrirPopUp(archivo) {
+                window.open('../Archivos/' + archivo, '', 'height=600,width=800');
+            }
+
+            function CargaInicial(idoportunidad) {
+                $.ajax({
+                    type: "GET",
+                    url: '/Oportunidades/CargaInicialArchivos',
+                    data: { idoportunidad: idoportunidad },
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#example').DataTable().clear().rows.add(data).draw();
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function SeleccionarPorId(id) {
+             
+                $.ajax({
+                    url: "/Oportunidades/ArchivosSeleccionarPorId/" + id,
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $('#Espera').show();
+                    },
+                    success: function (data) {
+                        $('#ModalNotas').modal('show');
+                        $('#Notas').val(data.Notas);
+                        $('#IdArchivo').val(data.Id);
+                        $('#clasificacion2').val(data.Clasificacion);
+                        $('#subclasificacion2').val(data.SubClasificacion);
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+            function SeleccionarPorId2(id) {
+
+                $.ajax({
+                    url: "/Oportunidades/ArchivosSeleccionarPorId2/" + id,
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $('#Espera').show();
+                    },
+                    success: function (data) {
+                        $('#ModalNotas').modal('show');
+                        $('#Notas').val(data.Notas);
+                        $('#IdArchivo').val(data.Id);
+                        $('#clasificacion2').val(data.Clasificacion);
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function AgregarNotas() {
+                $.ajax({
+                    type: 'GET',
+                    url: "/Oportunidades/AgregarNotas",
+                    data: {
+                        Notas: $("#Notas").val(),
+                        Id: $("#IdArchivo").val(),
+                        Clasificacion: $("#clasificacion2").val(),
+                        SubClasificacion: $("#subclasificacion2").val(),
+                        idoportunidad: $('#IdOportunidad').val()
+                    },
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.length > 0) {
+                            $.notify('Se agregaron las notas exitosamente.', {
+                                autohide: true, type: 'success', placement: {
+                                    from: 'bottom',
+                                    align: 'right'
+                                }
+                            });
+
+                            //Rellenar tabla de archivos
+                            /*$('#example').DataTable().clear().rows.add(data).draw();*/
+                            location.reload();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        swal({
+                            title: 'GAM ASAE',
+                            text: 'Ha ocurrido un error, revíselo en la consola para más información.',
+                            icon: 'error',
+                            buttons: {
+                                confirm: {
+                                    className: 'btn btn-error'
+                                }
+                            }
+                        }).then(
+                            function () {
+                                console.log('jqXHR:');
+                                console.log(jqXHR);
+                                console.log('textStatus:');
+                                console.log(textStatus);
+                                console.log('errorThrown:');
+                                console.log(errorThrown);
+                            });
+                    }
+                });
+            }
+
+            function SeguroEliminarArchivo(id) {
+                swal({
+                    title: 'Eliminación de Archivos',
+                    text: "¿Está seguro de querer eliminar este archivo?",
+                    type: 'warning',
+                    buttons: {
+                        confirm: {
+                            text: '¡Si, eliminarlo!',
+                            className: 'btn btn-success'
+                        },
+                        cancel: {
+                            visible: true,
+                            className: 'btn btn-warning',
+                            text: 'Cancelar'
+                        }
+                    }
+                }).then((Delete) => {
+                    if (Delete) {
+                        SeguroEliminarArchivo2(id);
+                    }
+                });
+            }
+
+            function SeguroEliminarArchivo2(id) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/Oportunidades/QuitarArchivo",
+                    data: {
+                        idarchivo: id,
+                        idoportunidad: $('#IdOportunidad').val()
+                    },
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data.length);
+                        if (data.length > 0 || data == '') {
+
+                            $.notify('Se eliminó el archivo exitosamente.', {
+                                autohide: true, type: 'success', placement: {
+                                    from: 'bottom',
+                                    align: 'right'
+                                }
+                            });
+
+                            //Rellenar tabla de archivos
+                            $('#example').DataTable().clear().rows.add(data).draw();
+                        }
+                        location.reload();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function SubirArchivo() {
+                if (window.FormData == undefined) {
+                    $.notify('Navegador no soportado para subir archivos.', {
+                        autohide: true, type: 'warning', placement: {
+                            from: 'bottom',
+                            align: 'right'
+                        }
+                    });
+                }
+                else {
+                    var fileUpload = $("#ArchivoASubir").get(0);
+                    var files = fileUpload.files;
+
+                    if (files.length == 0) {
+                        $.notify('Seleccione un archivo para subir.', {
+                            autohide: true, type: 'danger', placement: {
+                                from: 'bottom',
+                                align: 'right'
+                            }
+                        });
+                        return;
+                    }
+
+
+                    //Notificación clasificacion
+                    if ($('#clasificacion').val() == '') {
+
+                        swal({
+                            text: 'Seleccione alguna clasificación',
+                            icon: 'warning',
+                            buttons: {
+                                confirm: {
+                                    className: 'btn btn-warning'
+                                }
+                            }
+                        });
+                        return;
+                    }
+
+                    var fileData = new FormData();
+
+                    fileData.append('OportunidadId', $('#OportunidadId').val());
+                    fileData.append('clasificacion', $('#clasificacion').val());
+                    fileData.append('subclasificacion', $('#subclasificacion').val());
+                    fileData.append(files[0].name, files[0]);
+
+                    $.ajax({
+                        url: '/Oportunidades/SubirArchivo',
+                        type: 'post',
+                        datatype: 'json',
+                        contentType: false,
+                        processData: false,
+                        async: false,
+                        data: fileData,
+                        success: function (data) {
+                            console.log(data);
+                            if (data.length == 1) {
+                                //Carga por primera vez
+                                $('#ArchivoASubir').val('');
+
+                                $.notify('Se agregó el archivo exitosamente.', {
+                                    autohide: true, type: 'success', placement: {
+                                        from: 'bottom',
+                                        align: 'right'
+                                    }
+                                });
+
+                                //Rellenar tabla de archivos
+                                $('#example').DataTable().clear().rows.add(data).draw();
+                            }
+                            else if (data.length > 1) {
+                                //Carga más a los existentes
+                                $('#ArchivoASubir').val('');
+
+                                $.notify('Se agregó el archivo exitosamente.', {
+                                    autohide: true, type: 'success', placement: {
+                                        from: 'bottom',
+                                        align: 'right'
+                                    }
+                                });
+
+                                $('#example').DataTable().clear().rows.add(data).draw();
+                            }
+                            location.reload();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('jqXHR:');
+                            console.log(jqXHR);
+                            console.log('textStatus:');
+                            console.log(textStatus);
+                            console.log('errorThrown:');
+                            console.log(errorThrown);
+                        }
+                    });
+                }
+            }
+
+            function ClasificacionSeleccionada() {
+              
+                var valor = $('#clasificacion').val();
+                if (valor != '') {
+                    //Obtener las subclasificaciones que pertenecen a esta clasificacion y llenar el select correspondiente
+                    $.ajax({
+                        url: "/DocumentosASAE/SeleccionarSubclasificacionesPorClasificacion/",
+                        data: { idclasificacion: valor },
+                        type: "GET",
+                        contentType: "application/json",
+                        dataType: "json",
+                        beforeSend: function () {
+                            $('#Espera').show();
+                        },
+                        success: function (data) {
+                            //console.log(data);
+                            var len = data.length;
+                            $('#subclasificacion').empty();
+                            $('#subclasificacion').append('<option value="0">Seleccionar</option>');
+                            for (var i = 0; i < len; i++) {
+                                $('#subclasificacion').append('<option value=' + data[i].Id + '>' + data[i].Nombre + '</option>');
+                            }
+                        },
+                        complete: function () {
+                            $('#Espera').hide();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('jqXHR:');
+                            console.log(jqXHR);
+                            console.log('textStatus:');
+                            console.log(textStatus);
+                            console.log('errorThrown:');
+                            console.log(errorThrown);
+                        }
+                    });
+                }
+            }
+            function ClasificacionSeleccionada2() {
+                $("#selectSub").css("display", "block");
+                
+                var valor = $('#clasificacion2').val();
+                if (valor != '') {
+                    //Obtener las subclasificaciones que pertenecen a esta clasificacion y llenar el select correspondiente
+                    $.ajax({
+                        url: "/DocumentosASAE/SeleccionarSubclasificacionesPorClasificacion/",
+                        data: { idclasificacion: valor },
+                        type: "GET",
+                        contentType: "application/json",
+                        dataType: "json",
+                        beforeSend: function () {
+                            $('#Espera').show();
+                        },
+                        success: function (data) {
+                            //console.log(data);
+                            var len = data.length;
+                            $('#subclasificacion2').empty();
+                            
+
+                            $('#subclasificacion2').append('<option value="0">Seleccionar</option>');
+                            for (var i = 0; i < len; i++) {
+                                $('#subclasificacion2').append('<option value=' + data[i].Id + '>' + data[i].Nombre + '</option>');
+                            }
+                        },
+                        complete: function () {
+                            $('#Espera').hide();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('jqXHR:');
+                            console.log(jqXHR);
+                            console.log('textStatus:');
+                            console.log(textStatus);
+                            console.log('errorThrown:');
+                            console.log(errorThrown);
+                        }
+                    });
+                }
+            }
+
+            function AdministrarClasificaciones(id) {
+                $('#ModalClasificaciones').modal('show');
+                $.ajax({
+                    type: "GET",
+                    url: '/Administracion/SeleccionarTabla',
+                    data: { tabla: 'DocumentosASAEClasificacion', Id: id },
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+                        //$('#catalogos').val(tabla);
+                        $('#catalogos').DataTable().clear().rows.add(data).draw();
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function AgregarClasificacion(id) {
+                $.ajax({
+                    type: "GET",
+                    url: '/Administracion/TablasAgregarNuevo',
+                    data: { tabla: 'DocumentosASAEClasificacion', nombre: $('#aClasificacion').val(), Id: id },
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#catalogos').DataTable().clear().rows.add(data).draw();
+                        location.reload();
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function EliminarClasificacion(id) {
+                $.ajax({
+                    url: "/Administracion/EliminarDocumentosASAEClasificacion2/",
+                    data: { id: id },
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data >= 1) {
+                            swal({
+                                title: 'CRM',
+                                text: 'Se eliminó el registro exitosamente',
+                                icon: 'success',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-success'
+                                    }
+                                }
+                            }).then(
+                                function () {
+                                    location.reload();
+                                });
+                        }
+                        else {
+                            swal({
+                                title: 'CRM',
+                                text: 'No es posible eliminar la clasificación ya que contiene documentos).',
+                                icon: 'error',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-danger'
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function AdministrarSubClasificaciones() {
+                $('#ModalSubClasificaciones').modal('show');
+            }
+
+            function AgregarSubClasificacion(id) {
+                $.ajax({
+                    url: "/Administracion/GuardarDocumentosASAESubClasificacion/",
+                    data: { nombre: $('#aSubClasificacion').val(), clasificacion: $('#aaclasificacion').val(), Id: id },
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data >= 1) {
+                            swal({
+                                title: 'CRM',
+                                text: 'Se ha guardado el cambio al registro exitosamente',
+                                icon: 'success',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-success'
+                                    }
+                                }
+                            }).then(
+                                function () {
+                                    location.reload();
+                                });
+                        }
+                        else {
+                            swal({
+                                title: 'CRM',
+                                text: 'Ha habido un error al intentar procesar los datos',
+                                icon: 'error',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-error'
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function EliminarSubClasificacion(id) {
+                $.ajax({
+                    url: "/Administracion/EliminarDocumentosASAESubClasificacion/",
+                    data: { id: id },
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data >= 1) {
+                            swal({
+                                title: 'CRM',
+                                text: 'Se eliminó el registro exitosamente',
+                                icon: 'success',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-success'
+                                    }
+                                }
+                            }).then(
+                                function () {
+                                    $('#aaclasificacion').val('');
+                                    location.reload();
+                                });
+                        }
+                        else {
+                            swal({
+                                title: 'CRM',
+                                text: 'Si hay registros relacionados NO se borrará, revise bien la tabla de documentos.',
+                                icon: 'error',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-danger'
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+        </script>

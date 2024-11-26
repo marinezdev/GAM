@@ -1,0 +1,381 @@
+﻿
+@{
+    ViewBag.Title = "BitacoraUsuario";
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#opcOport').addClass("nav-item active submenu");
+
+        //$.fn.dataTable.moment("D/M/YYYY HH:mm:ss");
+
+        $.fn.dataTable.moment('HH:mm D/M/YYYY');
+        $.fn.dataTable.moment('HH:mm');
+
+        $('#basic-datatables2-').DataTable({
+            colReorder: true,
+            "pageLength": 20,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            "scrollX": true,
+            "order": [[1, "desc"]],
+        });
+
+        $("#formulario1").validate({
+            rules: {
+                Descripcion: {
+                    required: true
+                }
+            },
+            messages: {
+                Descripcion: {
+                    required: "Agregue una descripción breve"
+                }
+            }
+        });
+
+
+
+    });
+
+    function AgregarNuevoTipoActividad() {
+        $.ajax({
+            type: 'GET',
+            url: "/Oportunidades/AgregarTipoActividad",
+            data: {
+                nombre: $('#aTipoActividad').val(),
+            },
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (data) {
+                if (data == 1) {
+                    swal({
+                        title: 'GAM ASAE',
+                        text: 'Se guardó el registro',
+                        icon: 'success',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-success'
+                            }
+                        }
+                    });
+                    location.href = '';
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('jqXHR:');
+                console.log(jqXHR);
+                console.log('textStatus:');
+                console.log(textStatus);
+                console.log('errorThrown:');
+                console.log(errorThrown);
+            },
+        });
+    }
+
+    function NoVaciosCorreo(element) {
+
+        var arroba = element.value.lastIndexOf("@@");
+        var punto = element.value.lastIndexOf(".");
+
+        if (element.value === '') {
+            swal({
+                text: 'El correo es incorrecto, revise.',
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-warning'
+                    }
+                },
+            }).then(
+                function () {
+                    $('#Correo').focus();
+                }
+            );
+        }
+        else if (arroba == -1) {
+            swal({
+                text: 'El correo es incorrecto, falta @@.',
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-warning'
+                    }
+                },
+            }).then(
+                function () {
+                    $('#Correo').focus();
+                }
+            );
+        }
+        else if (punto == -1) {
+            swal({
+                text: 'El correo es incorrecto, revise.',
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-warning'
+                    }
+                },
+            }).then(
+                function () {
+                    $('#Correo').focus();
+                }
+            );
+        }
+    }
+
+</script>
+
+<script src="~/assets/js/plugin/validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.10.0/localization/messages_es.js"></script>
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Bitácora de Actividades</h4>
+    </div>
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="card">
+
+                <div class="card-header">
+                    <h4 class="card-title">@Html.Raw(Session["NombreTema"])</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Menu -->
+                    <div class="row">
+
+                        @if (Session["IdConfiguracion"].ToString() == "2")
+                        {
+                            @Html.Partial("_MenuEdicionOportunidades")
+                        }
+                        else if (Session["IdConfiguracion"].ToString() == "3")
+                        {
+                            @Html.Partial("_MenuEdicionOportunidadesSABE")
+                        }
+
+                    </div>
+
+                    <form id="Formulario1" method="post" action="ActividadesUsuariosAgregar">
+
+                        <input type="hidden" id="IdOportunidad" name="IdOportunidad" value="@Session["IdOportunidad"].ToString()" />
+                        <input type="hidden" id="IdUsuario" name="IdUsuario" value="@Session["IdUsuario"].ToString()" />
+
+                        <!--Estilo 1-->
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Descripción</span>
+                                        </div>
+                                        <textarea id="Descripcion" name="Descripcion" class="form-control" aria-label="Descripción" required></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Se envía a (opcional)</span>
+                                        </div>
+                                        <select id="Responsable" name="REsponsable" class="form-control">
+                                            <option value=""></option>
+                                            @foreach (var itm in ViewBag.ResponsablesAsunto)
+                                            {
+                                                <option value="@itm.Usuarios.Id">@itm.Usuarios.Nombre</option>
+                                            }
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Correo Externo</span>
+                                        </div>
+                                        <input type="text" id="Externo" name="Externo" class="form-control" aria-label="Correo Externo"  placeholder="usuario@correo.com" onblur="NoVaciosCorreo(this);" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!--
+                        <hr />
+
+                        <div class="row">
+
+                            <div class="col-md-8">
+
+                                <div class="form-group form-inline">
+                                    <label class="col-md-2 col-form-label">Descripción:</label>
+                                    <div class="col-md-12">
+                                        <textarea id="Descripcion" name="Descripcion" class="form-control form-control-sm input-solid" cols="70" rows="4" required></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <div class="form-group form-inline">
+                                    <label for="Responsable" class="col-md-2 col-form-label">Se envía a (opcional):</label>
+                                    <div class="col-md-12">
+                                        <select id="Responsable" name="Responsable" class="form-control form-control-sm input-solid" style="width: 250px">
+                                            <option value=""></option>
+                                            @foreach (var itm in ViewBag.ResponsablesAsunto)
+                                            {
+                                                <option value="@itm.Usuarios.Id">@itm.Usuarios.Nombre</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-inline">
+
+                                    <label for="Externo" class="col-md-2 col-form-label">Correo Externo:</label>
+                                    <div class="col-md-12">
+                                        <input type="text" name="Externo" id="Externo" class="form-control form-control-sm input-solid" style="width: 250px" onblur="NoVaciosCorreo(this);" />
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        -->
+                        <div class="row">
+
+
+                            <div class="col-md-12 text-center">
+                                <button type="submit" id="Submit" name="Submit" class="btn btn-success animated bounceInDown" value="Aceptar">
+                                    <span class="btn-label">
+                                        <i class="fa fa-envelope"></i><i class="fa fa-arrow-right"></i>
+                                    </span>
+                                    Aceptar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    @if (ViewBag.Mensaje != null)
+                    {
+                        @Html.Raw(ViewBag.Mensaje);
+                    }
+
+                    <div class="row">
+                        <!-- tabla -->
+
+                        @if (ViewBag.Bitacora.Count > 0)
+                        {
+
+                            <table id="basic-datatables2-" class="display compact table-striped table-hover" style="width:100%">
+                                <thead class="header">
+                                    <tr>
+                                        <th>Responsable</th>
+                                        <th>Fecha</th>
+                                        <th>Descripción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var items in ViewBag.Bitacora)
+                                    {
+                                        <tr>
+                                            <td>@items.Nombre</td>
+                                            <td>
+
+                                                @if (items.Fecha.ToString("dd/MM/yyyy") != "01/01/1900")
+                                                {
+                                                    <span>@items.Fecha.ToString("dd/MM/yyyy HH:mm")</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (items.Fecha.ToString("dd/MM/yyyy") != "01/01/1900")
+                                                {
+                                                    <span>@items.Notas</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>No ha escrito en bitácora aún</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        }
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="ModalNuevoTipoActividad" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">Agregar Tipo Actividad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-md-12">
+
+                    <div class="form-group form-inline">
+
+
+                        <label for="aTipoActividad" class="col-md-2 col-form-label">Nombre:</label>
+                        <div class="col-md-10">
+                            <input type="text" id="aTipoActividad" name="aTipoActividad" class="form-control form-control-sm input-solid" />
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="Acepto" name="Acepto" class="btn btn-success animated bounceInRight" data-dismiss="modal" onclick="AgregarNuevoTipoActividad();">Guardar</button>
+                <button type="button" class="btn btn-secondary animated bounceInLeft" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+

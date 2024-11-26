@@ -1,0 +1,523 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{56560F72-9AA1-4DE1-904F-8EDA846ABF68}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GAM</RootNamespace>
+    <AssemblyName>GAM</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\css\bootstrap-select.css" />
+    <Content Include="assets\css\bootstrap4Tables.css" />
+    <Content Include="assets\css\colReorder.dataTables.min.css" />
+    <Content Include="assets\css\dataTables.bootstrap4.min.css" />
+    <Content Include="assets\css\dataTables.min.css" />
+    <Content Include="assets\css\datepicker.css" />
+    <Content Include="assets\css\jquery-ui.css" />
+    <Content Include="assets\img\arrow.png" />
+    <Content Include="assets\img\asae.png" />
+    <Content Include="assets\img\asae_blanco.png" />
+    <Content Include="assets\img\darkdenim3.png" />
+    <Content Include="assets\img\dark_leather.png" />
+    <Content Include="assets\img\gam.jpg" />
+    <Content Include="assets\img\gam2.jpg" />
+    <Content Include="assets\img\logoarben.png" />
+    <Content Include="assets\img\sabe.png" />
+    <Content Include="assets\img\simple.png" />
+    <Content Include="assets\img\spinner.gif" />
+    <Content Include="assets\js\angular.min.js" />
+    <Content Include="assets\css\atlantis.css" />
+    <Content Include="assets\css\atlantis.min.css" />
+    <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\demo.css" />
+    <Content Include="assets\css\fonts.css" />
+    <Content Include="assets\css\fonts.min.css" />
+    <Content Include="assets\fonts\flaticon\flaticon.css" />
+    <Content Include="assets\fonts\flaticon\flaticon.html" />
+    <Content Include="assets\fonts\flaticon\Flaticon.svg" />
+    <Content Include="assets\fonts\fontawesome\fa-brands-400.svg" />
+    <Content Include="assets\fonts\fontawesome\fa-regular-400.svg" />
+    <Content Include="assets\fonts\fontawesome\fa-solid-900.svg" />
+    <Content Include="assets\fonts\simple-line-icons\Simple-Line-Icons.svg" />
+    <Content Include="assets\img\arashmil.jpg" />
+    <Content Include="assets\img\bg-404.jpeg" />
+    <Content Include="assets\img\bg-abstract.png" />
+    <Content Include="assets\img\bg-abstract2.png" />
+    <Content Include="assets\img\blogpost.jpg" />
+    <Content Include="assets\img\chadengle.jpg" />
+    <Content Include="assets\img\icon.ico" />
+    <Content Include="assets\img\icon.png" />
+    <Content Include="assets\img\icon.svg" />
+    <Content Include="assets\img\img-shadow.png" />
+    <Content Include="assets\img\jm_denis.jpg" />
+    <Content Include="assets\img\logo.svg" />
+    <Content Include="assets\img\logo2.svg" />
+    <Content Include="assets\img\logoalternatif.svg" />
+    <Content Include="assets\img\logoproduct.svg" />
+    <Content Include="assets\img\logoproduct2.svg" />
+    <Content Include="assets\img\logoproduct3.svg" />
+    <Content Include="assets\img\mlane.jpg" />
+    <Content Include="assets\img\profile.jpg" />
+    <Content Include="assets\img\profile2.jpg" />
+    <Content Include="assets\img\sauro.jpg" />
+    <Content Include="assets\img\talha.jpg" />
+    <Content Include="assets\img\visa.svg" />
+    <Content Include="assets\js\atlantis.js" />
+    <Content Include="assets\js\atlantis.min.js" />
+    <Content Include="assets\js\atlantis2.js" />
+    <Content Include="assets\js\core\bootstrap.min.js" />
+    <Content Include="assets\js\core\jquery.3.2.1.min.js" />
+    <Content Include="assets\js\core\popper.min.js" />
+    <Content Include="assets\js\dataTables.bootstrap4.min.js" />
+    <Content Include="assets\js\demo.js" />
+    <Content Include="assets\js\GAM.js" />
+    <Content Include="assets\js\plugin\bootstrap-notify\bootstrap-notify.min.js" />
+    <Content Include="assets\js\plugin\chart-circle\circles.min.js" />
+    <Content Include="assets\js\plugin\chart.js\chart.min.js" />
+    <Content Include="assets\js\plugin\datatables\dataTables.colReorder.min.js" />
+    <Content Include="assets\js\plugin\datatables\datatables.min.js" />
+    <Content Include="assets\js\plugin\datatables\datetime-moment.js" />
+    <Content Include="assets\js\plugin\datatables\es.js" />
+    <Content Include="assets\js\plugin\datatables\moment.min.js" />
+    <Content Include="assets\js\plugin\datetimepicker\datetimepicker.js" />
+    <Content Include="assets\js\plugin\datetimepicker\jquery.datetimepicker.css" />
+    <Content Include="assets\js\plugin\datetimepicker\jquery.datetimepicker.full.js" />
+    <Content Include="assets\js\plugin\datetimepicker\moment.js" />
+    <Content Include="assets\js\plugin\fullcalendar\bootstrap-toggle.min.js" />
+    <Content Include="assets\js\plugin\fullcalendar\fullcalendar.min.js" />
+    <Content Include="assets\js\plugin\fullcalendar\jquery.scrollbar.min.js" />
+    <Content Include="assets\js\plugin\fullcalendar\locales-all.js" />
+    <Content Include="assets\js\plugin\fullcalendar\locales\es.js" />
+    <Content Include="assets\js\plugin\fullcalendar\main.css" />
+    <Content Include="assets\js\plugin\fullcalendar\main.js" />
+    <Content Include="assets\js\plugin\jquery-scrollbar\jquery.scrollbar.min.js" />
+    <Content Include="assets\js\plugin\jquery-ui-1.12.1.custom\jquery-ui.min.js" />
+    <Content Include="assets\js\plugin\jquery-ui-touch-punch\jquery.ui.touch-punch.min.js" />
+    <Content Include="assets\js\plugin\jquery.sparkline\jquery.sparkline.min.js" />
+    <Content Include="assets\js\plugin\jqvmap\jquery.vmap.min.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\continents\jquery.vmap.africa.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\continents\jquery.vmap.asia.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\continents\jquery.vmap.australia.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\continents\jquery.vmap.europe.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\continents\jquery.vmap.north-america.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\continents\jquery.vmap.south-america.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.algeria.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.argentina.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.brazil.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.canada.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.croatia.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.europe.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.france.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.germany.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.greece.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.indonesia.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.iran.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.iraq.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.new_regions_france.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.russia.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.serbia.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.tunisia.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.turkey.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.ukraine.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.usa.counties.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.usa.districts.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.usa.js" />
+    <Content Include="assets\js\plugin\jqvmap\maps\jquery.vmap.world.js" />
+    <Content Include="assets\js\plugin\sweetalert\sweetalert.min.js" />
+    <Content Include="assets\js\plugin\validation\jquery.validate.min.js" />
+    <Content Include="assets\js\plugin\webfont\webfont.min.js" />
+    <Content Include="assets\js\setting-demo.js" />
+    <Content Include="assets\js\setting-demo2.js" />
+    <Content Include="assets\js\twbsPagination.js" />
+    <Content Include="assets\js\Views\Empresas\Editar.js" />
+    <Content Include="Global.asax" />
+    <Content Include="Views\Shared\Error.html" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdministracionController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BusquedaController.cs" />
+    <Compile Include="Controllers\ContactosController.cs" />
+    <Compile Include="Controllers\DocumentosASAEController.cs" />
+    <Compile Include="Controllers\EmpresasController.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OportunidadesActividadesController.cs" />
+    <Compile Include="Controllers\OportunidadesController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Actividades.cs" />
+    <Compile Include="Models\Archivos.cs" />
+    <Compile Include="Models\ArchivosBitacora.cs" />
+    <Compile Include="Models\Bitacora.cs" />
+    <Compile Include="Models\BitacoraUsuarios.cs" />
+    <Compile Include="Models\BitacoraUsuariosDetalle.cs" />
+    <Compile Include="Models\Clasificacion.cs" />
+    <Compile Include="Models\ClasificacionRolesContactos.cs" />
+    <Compile Include="Models\ClassSubClass.cs" />
+    <Compile Include="Models\ClassSubClassEtiquetas.cs" />
+    <Compile Include="Models\Configuracion.cs" />
+    <Compile Include="Models\ContactoRol.cs" />
+    <Compile Include="Models\Contactos.cs" />
+    <Compile Include="Models\ContactosActividades.cs" />
+    <Compile Include="Models\ContactosBuscar.cs" />
+    <Compile Include="Models\ContactosBuscarDetalle.cs" />
+    <Compile Include="Models\ContactosEmpresas.cs" />
+    <Compile Include="Models\Empresas.cs" />
+    <Compile Include="Models\EmpresasUsuarios.cs" />
+    <Compile Include="Models\Escalacion.cs" />
+    <Compile Include="Models\EstadisticasTablas.cs" />
+    <Compile Include="Models\EtapasBitacora.cs" />
+    <Compile Include="Models\EtapasOportunidad.cs" />
+    <Compile Include="Models\Modelos.cs" />
+    <Compile Include="Models\Oportunidades.cs" />
+    <Compile Include="Models\OportunidadesActividades.cs" />
+    <Compile Include="Models\OportunidadesBuscar.cs" />
+    <Compile Include="Models\OportunidadesECU.cs" />
+    <Compile Include="Models\OportunidadesEmpresasContactosUsuarios.cs" />
+    <Compile Include="Models\OportunidadesResponsables.cs" />
+    <Compile Include="Models\OportunidadesUsuarios.cs" />
+    <Compile Include="Models\UserRoleProvider.cs" />
+    <Compile Include="Models\UsuarioConfiguracion.cs" />
+    <Compile Include="Models\Roles.cs" />
+    <Compile Include="Models\RolesUsuarios.cs" />
+    <Compile Include="Models\Subclasificacion.cs" />
+    <Compile Include="Models\Tareas.cs" />
+    <Compile Include="Models\TareasUsuarios.cs" />
+    <Compile Include="Models\TareasUsuariosContactosEmpresas.cs" />
+    <Compile Include="Models\Usuarios.cs" />
+    <Compile Include="Models\UsuariosEmpresasOportunidades.cs" />
+    <Compile Include="Models\UsuariosEmpresasOportunidadesDetalle.cs" />
+    <Compile Include="Models\UsuariosRoles.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilerias\Comun.cs" />
+    <Compile Include="Utilerias\Cualquiera.cs" />
+    <Compile Include="Utilerias\CustomHelpers.cs" />
+    <Compile Include="Utilerias\SessionTimeOutAttribute.cs" />
+    <Compile Include="Utilerias\UsuarioComportamiento.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="assets\css\atlantis.css.map" />
+    <Content Include="assets\fonts\flaticon\Flaticon.eot" />
+    <Content Include="assets\fonts\flaticon\Flaticon.ttf" />
+    <Content Include="assets\fonts\flaticon\Flaticon.woff" />
+    <Content Include="assets\fonts\flaticon\_flaticon.scss" />
+    <Content Include="assets\fonts\fontawesome\fa-brands-400.eot" />
+    <Content Include="assets\fonts\fontawesome\fa-brands-400.ttf" />
+    <Content Include="assets\fonts\fontawesome\fa-brands-400.woff" />
+    <Content Include="assets\fonts\fontawesome\fa-brands-400.woff2" />
+    <Content Include="assets\fonts\fontawesome\fa-regular-400.eot" />
+    <Content Include="assets\fonts\fontawesome\fa-regular-400.ttf" />
+    <Content Include="assets\fonts\fontawesome\fa-regular-400.woff" />
+    <Content Include="assets\fonts\fontawesome\fa-regular-400.woff2" />
+    <Content Include="assets\fonts\fontawesome\fa-solid-900.eot" />
+    <Content Include="assets\fonts\fontawesome\fa-solid-900.ttf" />
+    <Content Include="assets\fonts\fontawesome\fa-solid-900.woff" />
+    <Content Include="assets\fonts\fontawesome\fa-solid-900.woff2" />
+    <Content Include="assets\fonts\simple-line-icons\Simple-Line-Icons.eot" />
+    <Content Include="assets\fonts\simple-line-icons\Simple-Line-Icons.ttf" />
+    <Content Include="assets\fonts\simple-line-icons\Simple-Line-Icons.woff" />
+    <Content Include="assets\fonts\simple-line-icons\Simple-Line-Icons.woff2" />
+    <Content Include="assets\fonts\summernote\summernote.eot" />
+    <Content Include="assets\fonts\summernote\summernote.ttf" />
+    <Content Include="assets\fonts\summernote\summernote.woff" />
+    <Content Include="assets\img\img-shadow.gvdesign" />
+    <Content Include="assets\sass\atlantis.scss" />
+    <Content Include="assets\sass\atlantis\components\_activityfeed.scss" />
+    <Content Include="assets\sass\atlantis\components\_alerts.scss" />
+    <Content Include="assets\sass\atlantis\components\_avatars.scss" />
+    <Content Include="assets\sass\atlantis\components\_badges.scss" />
+    <Content Include="assets\sass\atlantis\components\_breadcrumbs.scss" />
+    <Content Include="assets\sass\atlantis\components\_buttons.scss" />
+    <Content Include="assets\sass\atlantis\components\_cards.scss" />
+    <Content Include="assets\sass\atlantis\components\_charts.scss" />
+    <Content Include="assets\sass\atlantis\components\_colorinputs.scss" />
+    <Content Include="assets\sass\atlantis\components\_dropdowns.scss" />
+    <Content Include="assets\sass\atlantis\components\_gutters.scss" />
+    <Content Include="assets\sass\atlantis\components\_imagecheck.scss" />
+    <Content Include="assets\sass\atlantis\components\_inputs.scss" />
+    <Content Include="assets\sass\atlantis\components\_listgroup.scss" />
+    <Content Include="assets\sass\atlantis\components\_loader.scss" />
+    <Content Include="assets\sass\atlantis\components\_maps.scss" />
+    <Content Include="assets\sass\atlantis\components\_modals.scss" />
+    <Content Include="assets\sass\atlantis\components\_navbars.scss" />
+    <Content Include="assets\sass\atlantis\components\_navsearch.scss" />
+    <Content Include="assets\sass\atlantis\components\_navtabs.scss" />
+    <Content Include="assets\sass\atlantis\components\_paginations.scss" />
+    <Content Include="assets\sass\atlantis\components\_popovers.scss" />
+    <Content Include="assets\sass\atlantis\components\_progress.scss" />
+    <Content Include="assets\sass\atlantis\components\_selectgroup.scss" />
+    <Content Include="assets\sass\atlantis\components\_sliders.scss" />
+    <Content Include="assets\sass\atlantis\components\_stamps.scss" />
+    <Content Include="assets\sass\atlantis\components\_tables.scss" />
+    <Content Include="assets\sass\atlantis\components\_timeline.scss" />
+    <Content Include="assets\sass\atlantis\plugins\_animate.scss" />
+    <Content Include="assets\sass\atlantis\plugins\_datatables.scss" />
+    <Content Include="assets\sass\atlantis\plugins\_jqueryscrollbar.scss" />
+    <Content Include="assets\sass\atlantis\plugins\_jqueryui.scss" />
+    <Content Include="assets\sass\atlantis\plugins\_sweetalert.scss" />
+    <Content Include="assets\sass\atlantis\_background.scss" />
+    <Content Include="assets\sass\atlantis\_components.scss" />
+    <Content Include="assets\sass\atlantis\_flaticon.scss" />
+    <Content Include="assets\sass\atlantis\_font-awesome.scss" />
+    <Content Include="assets\sass\atlantis\_layouts-colors.scss" />
+    <Content Include="assets\sass\atlantis\_layouts.scss" />
+    <Content Include="assets\sass\atlantis\_opacity.scss" />
+    <Content Include="assets\sass\atlantis\_outlinefocus.scss" />
+    <Content Include="assets\sass\atlantis\_plugins.scss" />
+    <Content Include="assets\sass\atlantis\_responsive-horizontal.scss" />
+    <Content Include="assets\sass\atlantis\_responsive.scss" />
+    <Content Include="assets\sass\atlantis\_typography.scss" />
+    <Content Include="assets\sass\atlantis\_variables.scss" />
+    <Content Include="assets\sass\atlantis\_datepicker.scss" />
+    <Content Include="assets\js\date.format.js" />
+    <None Include="packages.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Contactos\Alta.cshtml" />
+    <Content Include="Views\Empresas\Alta.cshtml" />
+    <Content Include="Views\Administracion\Usuarios.cshtml" />
+    <Content Include="Views\Administracion\Permisos.cshtml" />
+    <Content Include="Views\Busqueda\Index.cshtml" />
+    <Content Include="Views\Oportunidades\Alta.cshtml" />
+    <Content Include="Views\Administracion\Roles.cshtml" />
+    <Content Include="Views\Contactos\Editar.cshtml" />
+    <Content Include="Views\Empresas\Editar.cshtml" />
+    <Content Include="Views\Oportunidades\Busqueda.cshtml" />
+    <Content Include="Views\Oportunidades\Editar.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Shared\_LayoutLogin.cshtml" />
+    <Content Include="Views\Home\Presentacion.cshtml" />
+    <Content Include="Views\Home\Salir.cshtml" />
+    <Content Include="Views\Home\CambiarContraseña.cshtml" />
+    <Content Include="Views\Oportunidades\AgregarArchivo.cshtml" />
+    <Content Include="Views\Oportunidades\Responsables.cshtml" />
+    <Content Include="Views\Oportunidades\Seguimiento.cshtml" />
+    <Content Include="Views\Home\Index2.cshtml" />
+    <Content Include="Views\Oportunidades\AgregarArchivoResponsable.cshtml" />
+    <Content Include="Views\Empresas\Index.cshtml" />
+    <Content Include="Views\Contactos\Index.cshtml" />
+    <Content Include="Views\Oportunidades\Index.cshtml" />
+    <Content Include="Views\Oportunidades\Actividades.cshtml" />
+    <Content Include="Views\Home\TemasEmpresas.cshtml" />
+    <Content Include="Views\Home\TemasContactos.cshtml" />
+    <Content Include="Views\Home\Temas.cshtml" />
+    <Content Include="Views\Oportunidades\ContactoActividades.cshtml" />
+    <Content Include="Views\Home\TemasDetalleEmpresas1.cshtml" />
+    <Content Include="Views\Home\TemasDetalleEmpresas5.cshtml" />
+    <Content Include="Views\Home\TemasDetalleEmpresas12.cshtml" />
+    <Content Include="Views\Home\TemasDetalleEmpresas13.cshtml" />
+    <Content Include="Views\Home\TemasDetalleEmpresas14.cshtml" />
+    <Content Include="Views\Home\TemasDetalleEmpresas2.cshtml" />
+    <Content Include="Views\Home\TemasDetalleEmpresas6.cshtml" />
+    <Content Include="Views\Home\TemasDetalleEmpresas7.cshtml" />
+    <Content Include="Views\Shared\_MenuEdicionOportunidades.cshtml" />
+    <Content Include="Views\Home\Clasificacion.cshtml" />
+    <Content Include="Views\Administracion\Clasificacion.cshtml" />
+    <Content Include="Views\Administracion\Configuracion.cshtml" />
+    <Content Include="Views\Home\Index3.cshtml" />
+    <Content Include="Views\Oportunidades\BitacoraUsuario.cshtml" />
+    <Content Include="Views\Contactos\Alta2.cshtml" />
+    <Content Include="Views\Empresas\Alta2.cshtml" />
+    <Content Include="Views\Oportunidades\Alta2.cshtml" />
+    <Content Include="Views\Administracion\UDN.cshtml" />
+    <Content Include="Views\Oportunidades\AltaResponsables.cshtml" />
+    <Content Include="Views\Home\RecuperarContraseña.cshtml" />
+    <Content Include="Views\Administracion\Gerentes.cshtml" />
+    <Content Include="Views\Administracion\UsuariosR.cshtml" />
+    <Content Include="Views\Administracion\UsuariosRAlta.cshtml" />
+    <Content Include="Views\Administracion\UsuariosREdicion.cshtml" />
+    <Content Include="Views\Oportunidades\Contactos.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Shared\_MenuLateral.cshtml" />
+    <Content Include="Views\Oportunidades\ResponsableActividades.cshtml" />
+    <Content Include="Views\Oportunidades\AgregarArchivoResponsable2.cshtml" />
+    <Content Include="Views\Home\Otras.cshtml" />
+    <Content Include="Views\Home\Index4.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Administracion\Multi.cshtml" />
+    <Content Include="Views\Administracion\Catalogos.cshtml" />
+    <Content Include="Views\Home\AsuntosARepetirse.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\NotFunction.cshtml" />
+    <Content Include="Views\Oportunidades\Edicion.cshtml" />
+    <Content Include="Views\Shared\_MenuEdicionOportunidadesSABE.cshtml" />
+    <Content Include="Views\Administracion\Empresas.cshtml" />
+    <Content Include="Views\Home\ProyectosASAE.cshtml" />
+    <Content Include="Views\Oportunidades\Calendario.cshtml" />
+    <Content Include="Views\Home\Busqueda.cshtml" />
+    <Content Include="Views\Empresas\Notas.cshtml" />
+    <Content Include="Views\Administracion\Notas.cshtml" />
+    <Content Include="Views\Home\Buscar.cshtml" />
+    <Content Include="Views\Oportunidades\Notas.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="ArchivosBitacora\" />
+    <Folder Include="Archivos\" />
+    <Folder Include="Documentos\" />
+    <Folder Include="Views\Base\" />
+    <Folder Include="Views\FilterConfig\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GAM.Models\GAM.Models.csproj">
+      <Project>{cd6d0089-8728-45b4-82e5-bf1e0b3d6e50}</Project>
+      <Name>GAM.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GAM.Utilerias\GAM.Utilerias.csproj">
+      <Project>{f654c399-c2c0-472f-916c-a034127692cc}</Project>
+      <Name>GAM.Utilerias</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>56745</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:56745/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

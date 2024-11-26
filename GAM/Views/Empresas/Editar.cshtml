@@ -1,0 +1,1409 @@
+﻿@model GAM.Models.Models.Empresas
+
+@{
+    ViewBag.Title = "Empresas";
+
+    var idEmpresas = Request["id"].ToString();
+}
+
+
+<input type="hidden" id="IdUsuario" value="@Session["IdUsuario"].ToString()" />
+<input type="hidden" id="IdEmpresa" value="@Request["Id"].ToString()" />
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Edición de @GAM.Utilerias.Titulos.Empresa(Session["IdConfiguracion"].ToString(), "S")</h4>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+
+                <div id="Espera" class="card-body is-loading is-loading-lg">
+                    Card content
+                </div>
+
+                <div class="card-body">
+
+                    <ul class="nav nav-pills nav-secondary" id="pills-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Edición</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-asuntos" role="tab" aria-controls="pills-profile" aria-selected="false">Asuntos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="3" data-toggle="pill" href="#pills-documentos" role="tab" aria-controls="pills-profile" aria-selected="false">Documentos</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mt-3 mb-4" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                            <p style="width: 650px;"></p>
+
+                            <form method="post" action="Modificar">
+
+                                <input type="hidden" name="Id" id="Id" />
+
+                                <!--Estilo 2-->
+
+                                <div class="row">
+
+                                    <div class="col-md-12">
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Nombre</span>
+                                                </div>
+                                                <input type="text" name="Nombre" class="form-control" aria-label="Nombre" value="@Model.Nombre" required />
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row">
+
+                                    <div class="col-md-6">
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Sucursal</span>
+                                                </div>
+                                                <input type="text" name="Sucursal" class="form-control" aria-label="Sucursal" value="@Model.Sucursal" autocomplete="off" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">RFC</span>
+                                                </div>
+                                                <input onblur="ValidaRfc(this.value)" type="text" name="RFC" class="form-control" aria-label="RFC" value="@Model.RFC" required />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-12">
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Dirección</span>
+                                                </div>
+                                                <input type="text" name="Direccion" class="form-control" aria-label="Dirección" value="@Model.Direccion" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-6">
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Ciudad</span>
+                                                </div>
+                                                <input type="text" name="Ciudad" class="form-control" aria-label="Ciudad" value="@Model.Ciudad" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Estado</span>
+                                                </div>
+                                                <select name="Estado" class="form-control">
+                                                    <option value="">&nbsp;</option>
+                                                    @foreach (var edos in ViewBag.Estados)
+                                                    {
+                                                        if (Model.Estado == edos.Id)
+                                                        {
+                                                            <option value="@edos.Id" selected>@edos.Nombre</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@edos.Id">@edos.Nombre</option>
+                                                        }
+
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+
+                                <input id="IdEmpresa" type="hidden" name="IdEmpresa" value="@Model.Id" />
+
+                                <div class="card-action label-align-center">
+                                    <button type="submit" class="btn btn-success animated bounceInLeft">Guardar</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="tab-pane fade" id="pills-asuntos" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            <p style="width: 650px;"></p>
+                            <h4>Asuntos en los que está asignada esta empresa</h4>
+
+                            <table class="table-head-bg-primary table-striped table-hover" style="width:100%;">
+                                <thead class="header">
+                                    <tr>
+                                        <th>Asunto</th>
+                                        <th>Vencimiento</th>
+                                        <th>Administrador Asunto</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var itm in ViewBag.EmpresaEnOportunidades)
+                                    {
+
+                                        <tr style="height: 30px">
+                                            <td>@itm.Nombre</td>
+                                            <td>@itm.Cierre.ToString("dd/MM/yyyy")</td>
+                                            <td>@GAM.Utilerias.CustomHelpers.NombreCreadorOportunidad(itm.Id.ToString())</td>
+                                            <td><a href="/Oportunidades/Edicion?Id=@itm.Id">Detalle</a></td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                        <div class="tab-pane fade" id="pills-documentos" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            <p style="width: 650px;"></p>
+                            <h4>Documentos Relacionados de esta empresa</h4>
+
+                            <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <!--text area notas-->
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Notas</span>
+                                            </div>
+                                            <textarea class="form-control" aria-label="Notas" id="Notas"></textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!--text area palabras clave-->
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Palabras Clave</span>
+                                            </div>
+                                            <input type="text" class="form-control" aria-label="Palabras Clave" id="PalabrasClave" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!---DISEÑO DE PRUEBA-->
+                            <br />
+                            <div class="container" align="center">
+                                <div class="row">
+                                    <div class="col">
+
+                                        <label class="row col-md-3 col-form-label fw-bold">Clasificación</label>
+
+                                        <select class="form-control form-control-sm input-solid" id="clasificacion" name="clasificacion" style="width: 180px" onchange="ClasificacionSeleccionada();">
+                                            <option value="0">Seleccionar</option>
+                                            @foreach (var clas in GAM.Models.Catalogos.ListarClas("DocumentosASAEClasificacion", @Request["Id"]))
+                                            {
+                                                <option value="@clas.Id">@clas.Nombre</option>
+                                            }
+                                        </select>
+
+                                        <div class="col-md-4 text-center "><a id="ListaClasificaciones" href="#" onclick="AdministrarClasificaciones(@Request["Id"]);">Crear Clasificación</a></div>
+
+                                    </div>
+
+                                    <div class="col">
+                                        <label class="row col-md-3 col-form-label fw-bold">SubClasificación</label>
+                                        <select class="form-control form-control-sm input-solid" id="subclasificacion" name="subclasificacion" style="width: 180px"></select>
+                                        <div class="col-md-4 text-center"><a id="ListaSubClasificaciones" href="#" onclick="AdministrarSubClasificaciones(@Request["Id"])">Crear SubClasificación</a></div>
+                                    </div>
+                                </div>
+                                <!----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+                                <br />
+                                <br />
+                                <div style="border:0px solid black">
+
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+
+
+                                            <div class="input-group" style="margin-left: 20%">
+
+                                                <div class="form-group form-inline">
+
+                                                    <!--Botones para subir archivos-->
+
+                                                    <input type="file" id="ArchivoASubir" class="form-control" /> <br />
+
+                                                    <input type="hidden" id="idempresa" value="@Request["Id"]" />
+
+                                                    <button id="SubirArchivo" class="btn btn-success" onclick="SubirArchivo();">Subir Archivo</button>
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+                            </div>
+
+                            <!------INICIO TARJETA CLASIFICACIONES------->
+                            <div class="card">
+
+                                <div class="card-body">
+
+                                    <div class="tab-pane fade active show" id="v-pills-home-icons" role="tabpanel" aria-labelledby="v-pills-home-tab-icons" style="width: 90%">
+                                        <div class="accordion accordion-secondary">
+
+                                            @foreach (var items in GAM.Models.Catalogos.ListarClas("DocumentosASAEClasificacion", @Request["Id"]))
+                                            {
+
+                                                var encabezado = "heading" + items.Id;
+                                                var colapso = "colapso" + items.Id;
+                                                var gcolapso = "#colapso" + items.Id;
+                                                <div class="card">
+                                                    <div class="card-header collapsed" id="@encabezado" data-toggle="collapse" data-target="@gcolapso" aria-expanded="false" aria-controls="@colapso" role="button">
+                                                        <div class="span-icon">
+                                                            <div class="fas fa-folder text-warning"></div>
+                                                        </div>
+                                                        <div class="span-title text-dark fw-bold">
+                                                            @items.Nombre
+                                                        </div>
+                                                        <div class="span-mode text-dark"></div>
+                                                    </div>
+
+                                                    <div id="@colapso" class="collapse" aria-labelledby="@encabezado" data-parent="#accordion">
+                                                        <div class="card-body">
+                                                            <!--INICIO TABLA CLASIFCACIONES-->
+                                                            @if (GAM.Models.Catalogos.SeleccionarClasificacionesDocumentos(items.Id.ToString()).Count() > 0)
+                                                            {
+
+                                                                <table id="Tclasificacion" class="table-responsive table table-striped table-hover table-bordered table-head-bg-warning" width="100%">
+                                                                    <thead class="table-active">
+                                                                        <tr>
+                                                                            <th>Nombre</th>
+                                                                            <th>Fecha</th>
+                                                                            <th>Notas</th>
+                                                                            <th width="2%">Modificar</th>
+                                                                            <th width="2%">Eliminar</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach (var datos in GAM.Models.Catalogos.SeleccionarClasificacionesDocumentos(items.Id.ToString()))
+                                                                        {
+                                                                            if (datos.IdEmpresa == Int32.Parse(idEmpresas)) //OBTENER EL ID de la empresa DEL URL  y compararlo para mostrar datos relacionados
+                                                                            {
+                                                                        <tr>
+                                                                            <td><i class="fa fa-file text-info"></i>&nbsp;&nbsp;<a href="#" onclick="VerRegistro(@datos.Id);">@datos.Nombre</a></td>
+                                                                            <td>@datos.Fecha</td>
+                                                                            <td>@datos.Notas</td>
+                                                                            <td style="font-size:20px;"><a href="/Empresas/Notas?Id= @datos.Id">  <i class="fas fa-pen"></i></a></td>
+                                                                            <td style="font-size:20px;"><a href="#" onclick=" SeguroEliminarArchivo(@datos.Id);"><i class="fas fa-trash text-danger"></i></a></td>
+                                                                        </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            }
+                                                            else
+                                                            {
+                                                                <label class="label label-align-center">No se han agregado documentos.</label>
+                                                            }
+                                                            <!--FIN TABLA CLASIFCACIONES-->
+                                                            @foreach (var itemss in GAM.Models.Catalogos.SeleccionarSubConsulta2("DocumentosASAESubClasificacion", "IdClasificacion", items.Id.ToString()))
+                                                            {
+                                                                var encabezadoo = "headingg" + itemss.Id;
+                                                                var colapsoo = "colapsoo" + itemss.Id;
+                                                                var gcolapsoo = "#colapsoo" + itemss.Id;
+                                                                <div class="card">
+                                                                    <div class="card-header collapsed" id="@encabezadoo" data-toggle="collapse" data-target="@gcolapsoo" aria-expanded="false" aria-controls="@colapsoo" role="button">
+                                                                        <div class="span-icon">
+                                                                            <div class="fas fa-folder text-primary"></div>
+                                                                        </div>
+                                                                        <div class="span-title text-dark">
+                                                                            @itemss.Nombre
+                                                                        </div>
+                                                                        <div class="span-mode text-dark"></div>
+                                                                    </div>
+
+                                                                    <div id="@colapsoo" class="collapse" aria-labelledby="@encabezadoo" data-parent="#accordion">
+                                                                        <div class="card-body" style="background-color: gainsboro">
+
+
+                                                                            <!--INICIO SUB CLASIFICACIONES-->
+                                                                            @if (GAM.Models.Catalogos.SeleccionarClasificacionSubClasificacionDocumentos(items.Id.ToString(), itemss.Id.ToString()).Count() > 0)
+                                                                            {
+                                                                                <table id="TSubClasificacion" class="table table-responsive table-striped table-hover table-bordered table-head-bg-primary">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>Nombre</th>
+                                                                                            <th>Fecha</th>
+                                                                                            <th>Notas</th>
+                                                                                            <th width="3%">Modificar</th>
+                                                                                            <th width="3%">Eliminar</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        @foreach (var datoss in GAM.Models.Catalogos.SeleccionarClasificacionSubClasificacionDocumentos(items.Id.ToString(), itemss.Id.ToString()))
+                                                                                        {
+
+                                                                                            if (datoss.IdEmpresa == Int32.Parse(idEmpresas)) //OBTENER EL ID de la empresa DEL URL  y compararlo para mostrar datos relacionados
+                                                                                            {
+                                                                                                <tr>
+                                                                                                    <td><i class="fa fa-file text-info"></i>&nbsp;&nbsp;<a href="#" onclick="VerRegistro(@datoss.Id);">@datoss.Nombre</a></td>
+                                                                                                    <td>@datoss.Fecha</td>
+                                                                                                    <td>@datoss.Notas</td>
+                                                                                                    <td style="font-size:20px;"><a href="/Empresas/Notas?Id= @datoss.Id">  <i class="fas fa-pen"></i></a></td>
+                                                                                                    <td style="font-size:20px;"><a href="#" onclick=" SeguroEliminarArchivo(@datoss.Id);"><i class="fas fa-trash text-danger"></i></a></td>
+                                                                                                </tr>
+                                                                                            }
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <label class="label label-align-center">No se han agregado documentos.</label>
+                                                                            }
+                                                                            <!--FIN SUB CLASIFICACIONES-->
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            }
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Administrar clasificaciones -->
+                            <div class="modal fade" id="ModalClasificaciones" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title" id="ModalLabel1">Agregar/Eliminar Clasificaciones</h3>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="col-md-12">
+
+                                                <div class="row">
+
+                                                    <div class="col-md-8 col-lg-8">
+                                                        <div class="form-group form-inline">
+                                                            <label for="aClasificacion" class="col-md-3 col-form-label">Nombre</label>
+                                                            <div class="col-md-9 col-lg-9">
+                                                                <input type="text" class="form-control form-control-sm input-solid" id="aClasificacion" required autocomplete="off">
+                                                                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="AgregarClasificacion(@Model.Id);">Agregar</button>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+
+                                                    <table id="catalogos" class="display compact" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="1%">Id</th>
+                                                                <th width="60%">Nombre</th>
+                                                                <th width="3%" align="center"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Administrar subclasificaciones -->
+                            <div class="modal fade" id="ModalSubClasificaciones" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="modal-title" id="ModalLabel1">Agregar/Eliminar SubClasificaciones</h3>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div class="col-md-12">
+
+                                                <div class="row">
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group form-inline">
+                                                            <label for="aSubClasificacion" class="col-md-3 col-form-label">Nombre</label>
+                                                            <div class="col-md-9 col-lg-9">
+                                                                <input type="text" class="form-control form-control-sm input-solid" id="aSubClasificacion" required autocomplete="off">
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+
+                                                        <div class="form-group form-inline">
+                                                            <label for="aClasificacion" class="col-md-3 col-form-label">Nombre</label>
+                                                            <div class="col-md-9 col-lg-9">
+
+                                                                <select class="form-control form-control-sm input-solid" id="aaclasificacion" name="aaclasificacion" style="width: 180px">
+                                                                    <option value="0">Seleccionar&nbsp;</option>
+                                                                    @foreach (var clas in GAM.Models.Catalogos.ListarClas("DocumentosASAEClasificacion", @Request["Id"]))
+                                                                    {
+                                                                        <option value="@clas.Id">@clas.Nombre</option>
+                                                                    }
+                                                                </select>
+
+                                                                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="AgregarSubClasificacion(@Model.Id);">Agregar</button>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div class="row">
+
+
+                                                    <table id="catalogos2" class="display compact table-striped table-hover" style="width:100%">
+                                                        <thead class="header">
+                                                            <tr>
+                                                                <th>Id</th>
+                                                                <th>Nombre</th>
+                                                                <th>Eliminar</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+
+
+
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <!------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- VIEW registro -->
+        <div class="modal fade" id="ModalPDF" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="ModalTitulo"></h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="min-height:500px;">
+
+                        <div class="col-md-12">
+
+                            <div class="row">
+
+                                <div class="col-md-12" style="min-height: 500px; ">
+
+                                    <!--pantalla de visualización-->
+                                    <div style="width: 100%; height: 100%">
+                                        <!--documento aquí-->
+                                        <iframe id="iframepdf" title="webviewer" frameborder="0" width="100%" height="100%" toolbar="0" onload="disableContextMenu();"></iframe>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <script src="../assets/js/Views/Empresas/Editar.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#Tclasificacion').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+                    }
+                });
+
+                $('#TSubClasificacion').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.12.1/i18n/es-MX.json'
+                    }
+                });
+            });
+
+            //Función reload
+            $(document).ready(function () {
+                activaTab(@Request["num"]);
+            });
+            function activaTab(tab) {
+                $('#' + tab ).click();
+            };
+
+
+          //metodo para registro y subida de archivos
+            function SubirArchivo() {
+                //notificación en caso de vacio palabras clave
+                if ($('#PalabrasClave').val() == '') {
+
+                    swal({
+                        text: 'Agregue por lo menos una palabra clave',
+                        icon: 'warning',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-warning'
+                            }
+                        }
+                    });
+                    return;
+                }
+                //Notificación clasificacion
+                if ($('#clasificacion').val() == '') {
+
+                    swal({
+                        text: 'Seleccione alguna clasificación',
+                        icon: 'warning',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-warning'
+                            }
+                        }
+                    });
+                    return;
+                }
+
+                var fileUpload = $("#ArchivoASubir").get(0);
+                var files = fileUpload.files;
+
+                if (files.length == 0) {
+                    $.notify('Seleccione un archivo para subir.', {
+                        autohide: true, type: 'danger', placement: {
+                            from: 'bottom',
+                            align: 'right'
+                        }
+                    });
+                    return;
+                }
+
+                //metodo para rellenar tabla con informacion
+                var fileData = new FormData();
+
+                fileData.append('idempresa', $('#idempresa').val());
+                fileData.append('notas', $('#Notas').val());
+                fileData.append('palabrasclave', $('#PalabrasClave').val());
+
+                fileData.append('clasificacion', $('#clasificacion').val());
+                fileData.append('subclasificacion', $('#subclasificacion').val());
+
+                fileData.append(files[0].name, files[0]);
+
+                $.ajax({
+                    url: '/Empresas/SubirArchivo',
+                    type: 'post',
+                    datatype: 'json',
+                    contentType: false,
+                    processData: false,
+                    async: false,
+                    data: fileData,
+                    success: function (data) {
+                        //console.log('Datos de la subida' + data.length);
+                        if (data.length == 1) {
+                            //Carga por primera vez
+                            $('#ArchivoASubir').val('');
+
+                            $.notify('Se agregó el archivo exitosamente.', {
+                                autohide: true, type: 'success', placement: {
+                                    from: 'bottom',
+                                    align: 'right'
+
+                                }
+                            });
+
+                            //Rellenar tabla de archivos
+                            /*   $('#tabla01').DataTable().clear().rows.add(data).draw();*/
+
+                        }
+                        else if (data.length > 1) {
+                            //Carga más a los existentes
+                            $('#ArchivoASubir').val('');
+
+                            $.notify('Se agregó el archivo exitosamente.', {
+                                autohide: true, type: 'success', placement: {
+                                    from: 'bottom',
+                                    align: 'right'
+                                }
+                            });
+                        }
+                        window.location.href = 'Editar?Id=' + @Request["Id"] + "&num=3";
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+
+            }
+
+
+            $(document).ready(function () {
+
+                $('#opcDocs').addClass("nav-item active submenu");
+                $('#Espera').hide();
+
+                $('#catalogos').DataTable({
+                    "searching": false,
+                    "paging": false,
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                    },
+                    info: false,
+                    columns: [
+                        { data: 'Id' },
+                        { data: 'Nombre' }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [2],
+                            data: "Id",
+                            render: function (data) {
+                                return '<a href="#" onclick=EliminarClasificacion(' + data + ');><i class="fas fa-trash text-danger"></i></a>';
+                            }
+                        }
+                    ]
+                });
+
+                $('#catalogos2').DataTable({
+                    "searching": false,
+                    "paging": false,
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                    },
+                    info: false,
+                    columns: [
+                        { data: 'Id' },
+                        { data: 'Nombre' }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [2],
+                            data: "Id",
+                            render: function (data) {
+                                return '<a href="#" onclick=EliminarSubClasificacion(' + data + ');><i class="fas fa-trash text-danger"></i></a>';
+                            }
+                        }
+                    ]
+                });
+
+                ValidarSiUsuarioPuedeAgregarClasSubClas();
+
+            });
+
+
+
+            //MODAL PDF
+            function VerRegistro(id) {
+          
+                $('#ModalPDF').modal('show');
+                  SeleccionarPorId2(id);
+            }
+
+
+
+            function SeleccionarPorId2(id) {
+            
+                $.ajax({
+                    url: "/Empresas/DocumentoSeleccionarPorId/",
+                    data: { id: id },
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $('#Espera').show();
+                    },
+                    success: function (data) {
+                      
+                        $('#Notas').val(data.Notas);
+                        $('#IdDocumento').val(data.Id);
+                        $('#ModalTitulo').text('Datos del documento: ' + data.Nombre)
+                        $('#iframepdf').attr('src', '/Documentos/' + data.Nombre + '#toolbar=0');
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+
+
+            $('#divNotas').hide();
+
+            $(document).ready(function () {
+
+                //Inicialización de la tabla
+                $('#tabla01').append('<caption style="caption-side: top"><h3>Archivos Agregados</h3></caption>');
+                $('#tabla01').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                    },
+                    columns: [
+                        { data: 'Nombre' }
+                        , { data: 'Fecha' }
+                        , { data: 'Notas' }
+                    ],
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            data: "Nombre",
+                            render: function (data) {
+                                return '<a href="/Documentos/' + data + '" target="_blank">' + data + '</a>';
+                                //return '<a href="#" onclick=AbrirPopUp("' + data + '");>' + data + '</a>';
+                            }
+                        }, {
+                            targets: [1],
+                            render: function (data) {
+                                var fecha = new Date(parseInt(data.substr(6)));
+                                var mes = (fecha.getMonth() + 1) < 10 ? '0' + (fecha.getMonth() + 1) : (fecha.getMonth() + 1);
+                                var fecha = fecha.getDate() + '/' + mes + '/' + fecha.getFullYear();
+                                return fecha;
+                            }
+                        }
+                        , {
+                            targets: [3],
+                            data: "Id",
+                            className: "text-center",
+                            render: function (data) {
+                                return '<a href="/Empresas/Notas?Id=' + data + '" class=text-primary><i class="fas fa-clipboard-list" data-toggle="tooltip" data-placement="left" title="Agregar Notas"></i></a>';
+                            }
+                        }
+                        , {
+                            targets: [4],
+                            data: "Id",
+                            className: "text-center",
+                            render: function (data) {
+                                data = '<a href="#" onclick="SeguroEliminarArchivo(' + data + ');" class="text-danger"><i class="fas fa-trash" data-toggle="tooltip" data-placement="left" title="Eliminar"></i></a>';
+                                return data;
+                            }
+                        }
+                    ]
+                });
+
+                var obtenerParametrodeURL = function getUrlParameter(sParam) {
+                    var sPageURL = window.location.search.substring(1),
+                        sURLVariables = sPageURL.split('&'),
+                        sParameterName,
+                        i;
+
+                    for (i = 0; i < sURLVariables.length; i++) {
+                        sParameterName = sURLVariables[i].split('=');
+
+                        if (sParameterName[0] === sParam) {
+                            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                        }
+                    }
+                };
+
+                var idd = obtenerParametrodeURL('Id');
+
+                CargaInicial(idd);
+
+            });
+            //pinta tabla al inicio
+            function CargaInicial(idempresa) {
+                $.ajax({
+                    type: "GET",
+                    url: '/Empresas/CargaInicialArchivos',
+                    data: { idempresa: idempresa },
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+
+                        $('#tabla01').DataTable().clear().rows.add(data).draw();
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function SeleccionarPorId(id) {
+                $.ajax({
+                    url: "/Empresas/DocumentoSeleccionarPorId/",
+                    data: { id: id },
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    beforeSend: function () {
+                        $('#Espera').show();
+                    },
+                    success: function (data) {
+                        //$('#divNotas').show();
+                        $('#Notas').val(data.Notas);
+                        $('#IdDocumento').val(data.Id);
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function AgregarNotas() {
+                $.ajax({
+                    type: 'GET',
+                    url: "/Empresas/AgregarNotas",
+                    data: {
+                        Notas: $("#Notas").val(),
+                        Id: $("#IdDocumento").val(),
+                        idempresa: $('#IdEmpresa').val()
+                    },
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.length > 0) {
+                            $.notify('Se agregaron las notas exitosamente.', {
+                                autohide: true, type: 'success', placement: {
+                                    from: 'bottom',
+                                    align: 'right'
+                                }
+                            });
+
+                            //Rellenar tabla de archivos
+                            $('#tabla01').DataTable().clear().rows.add(data).draw();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        swal({
+                            text: 'Ha ocurrido un error, revíselo en la consola para más información.',
+                            icon: 'error',
+                            buttons: {
+                                confirm: {
+                                    className: 'btn btn-error'
+                                }
+                            }
+                        }).then(
+                            function () {
+                                console.log('jqXHR:');
+                                console.log(jqXHR);
+                                console.log('textStatus:');
+                                console.log(textStatus);
+                                console.log('errorThrown:');
+                                console.log(errorThrown);
+                            });
+                    }
+                });
+            }
+
+            // metodo que elimina un archivo y su registro
+            function SeguroEliminarArchivo(id) {
+                swal({
+                    title: 'Eliminación de Archivos',
+                    text: "¿Está seguro de querer eliminar este archivo?",
+                    type: 'warning',
+                    buttons: {
+                        confirm: {
+                            text: '¡Si, eliminarlo!',
+                            className: 'btn btn-success'
+                        },
+                        cancel: {
+                            visible: true,
+                            className: 'btn btn-warning',
+                            text: 'Cancelar'
+                        }
+                    }
+                }).then((Delete) => {
+                    if (Delete) {
+                        SeguroEliminarArchivo2(id);
+                    }
+                });
+            }
+            //metodo que actualiza datos despues de eliminar
+            function SeguroEliminarArchivo(id) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/Empresas/QuitarArchivo",
+                    data: {
+                        iddocumento: id,
+                        idempresa: $('#IdEmpresa').val()
+                    },
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data.length);
+                        if (data.length > 0 || data == '') {
+
+                            $.notify('Se eliminó el archivo exitosamente.', {
+                                autohide: true, type: 'success', placement: {
+                                    from: 'bottom',
+                                    align: 'right'
+                                }
+                            });
+
+                            location.reload();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function ValidaRfc(rfcStr) {
+                var strCorrecta;
+                strCorrecta = rfcStr;
+                if (rfcStr.length == 12) {
+                    var valid = '^(([A-Z]|[a-z]){3})([0-9]{6})((([A-Z]|[a-z]|[0-9]){3}))';
+                } else {
+                    var valid = '^(([A-Z]|[a-z]|\s){1})(([A-Z]|[a-z]){3})([0-9]{6})((([A-Z]|[a-z]|[0-9]){3}))';
+                }
+                var validRfc = new RegExp(valid);
+                var matchArray = strCorrecta.match(validRfc);
+                if (matchArray == null) {
+                    alert('RFC incorrecto');
+                    return false;
+                }
+                else {
+                    //alert('Cadena correcta:' + strCorrecta);
+                    return true;
+                }
+
+            }
+
+            function EliminarClasificacion(id) {
+                $.ajax({
+                    url: "/Administracion/EliminarDocumentosASAEClasificacion/",
+                    data: { id: id },
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data >= 1) {
+                            swal({
+                                title: 'CRM',
+                                text: 'Se eliminó el registro exitosamente',
+                                icon: 'success',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-success'
+                                    }
+                                }
+                            }).then(
+                                function () {
+                                    location.reload();
+                                });
+                        }
+                        else {
+                            swal({
+                                title: 'CRM',
+                                text: 'No es posible eliminar la clasificación ya que contiene documentos).',
+                                icon: 'error',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-danger'
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function EliminarSubClasificacion(id) {
+                $.ajax({
+                    url: "/Administracion/EliminarDocumentosASAESubClasificacion/",
+                    data: { id: id },
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data >= 1) {
+                            swal({
+                                title: 'CRM',
+                                text: 'Se eliminó el registro exitosamente',
+                                icon: 'success',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-success'
+                                    }
+                                }
+                            }).then(
+                                function () {
+                                    $('#aaclasificacion').val('');
+                                    location.reload();
+                                });
+                        }
+                        else {
+                            swal({
+                                title: 'CRM',
+                                text: 'No es posible eliminar la SubClasificación ya que contiene documentos.',
+                                icon: 'error',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-danger'
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function ClasificacionSeleccionada() {
+                var valor = $('#clasificacion').val();
+                if (valor != '') {
+                    //Obtener las subclasificaciones que pertenecen a esta clasificacion y llenar el select correspondiente
+                    $.ajax({
+                        url: "/DocumentosASAE/SeleccionarSubclasificacionesPorClasificacion/",
+                        data: { idclasificacion: valor },
+                        type: "GET",
+                        contentType: "application/json",
+                        dataType: "json",
+                        beforeSend: function () {
+                            $('#Espera').show();
+                        },
+                        success: function (data) {
+                            //console.log(data);
+                            var len = data.length;
+                            $('#subclasificacion').empty();
+                            $('#subclasificacion').append('<option value=0>Seleccionar</option>');
+                            for (var i = 0; i < len; i++) {
+                                $('#subclasificacion').append('<option value=' + data[i].Id + '>' + data[i].Nombre + '</option>');
+                            }
+                        },
+                        complete: function () {
+                            $('#Espera').hide();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log('jqXHR:');
+                            console.log(jqXHR);
+                            console.log('textStatus:');
+                            console.log(textStatus);
+                            console.log('errorThrown:');
+                            console.log(errorThrown);
+                        }
+                    });
+                }
+            }
+
+            function AdministrarClasificaciones(id) {
+                $('#ModalClasificaciones').modal('show');
+                $.ajax({
+                    type: "GET",
+                    url: '/Administracion/SeleccionarTabla',
+                    data: { tabla: 'DocumentosASAEClasificacion', Id:id},
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+
+                        $('#catalogos').DataTable().clear().rows.add(data).draw();
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function AgregarClasificacion(id) {
+                $.ajax({
+                    type: "GET",
+                    url: '/Administracion/TablasAgregarNuevo',
+                    data: { tabla: 'DocumentosASAEClasificacion', nombre: $('#aClasificacion').val(),Id: id},
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#catalogos').DataTable().clear().rows.add(data).draw();
+                        location.reload();
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function AdministrarSubClasificaciones(id) {
+                $('#ModalSubClasificaciones').modal('show');
+                $.ajax({
+                    type: "GET",
+                    url: '/Administracion/SeleccionarTabla2',
+                    data: { tabla: 'DocumentosASAESubClasificacion', Id: id },
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success: function (data) {
+
+                        $('#catalogos2').DataTable().clear().rows.add(data).draw();
+                    },
+                    complete: function () {
+                        $('#Espera').hide();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function AgregarSubClasificacion(id) {
+                $.ajax({
+                    url: "/Administracion/GuardarDocumentosASAESubClasificacion/",
+                    data: { nombre: $('#aSubClasificacion').val(), clasificacion: $('#aaclasificacion').val(), Id: id },
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data >= 1) {
+                            swal({
+                                title: 'CRM',
+                                text: 'Se ha guardado el cambio al registro exitosamente',
+                                icon: 'success',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-success'
+                                    }
+                                }
+                            }).then(
+                                function () {
+                                    location.reload();
+                                });
+                        }
+                        else {
+                            swal({
+                                title: 'CRM',
+                                text: 'Ha habido un error al intentar procesar los datos',
+                                icon: 'error',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-error'
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            function EliminarSubClasificacion(id) {
+                $.ajax({
+                    url: "/Administracion/EliminarDocumentosASAESubClasificacion/",
+                    data: { id: id },
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data >= 1) {
+                            swal({
+                                title: 'CRM',
+                                text: 'Se eliminó el registro exitosamente',
+                                icon: 'success',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-success'
+                                    }
+                                }
+                            }).then(
+                                function () {
+                                    $('#aaclasificacion').val('');
+                                    location.reload();
+                                });
+                        }
+                        else {
+                            swal({
+                                title: 'CRM',
+                                text: 'Si hay registros relacionados NO se borrará, revise bien la tabla de documentos.',
+                                icon: 'error',
+                                buttons: {
+                                    confirm: {
+                                        className: 'btn btn-danger'
+                                    }
+                                }
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log('jqXHR:');
+                        console.log(jqXHR);
+                        console.log('textStatus:');
+                        console.log(textStatus);
+                        console.log('errorThrown:');
+                        console.log(errorThrown);
+                    }
+                });
+            }
+        </script>
+

@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "Búsqueda";
+}
+
+<div class="page-inner">
+    <div class="page-header">
+        <h4 class="page-title">Encontrado</h4>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+
+                            @if (ViewBag.BusquedaGeneral != null)
+                            {
+                                if (ViewBag.BusquedaGeneral.Count > 0)
+                                {
+                                    <p>Asuntos | Notas | Archivos | Usuarios | Empresas</p>
+
+                                    foreach (var item in ViewBag.BusquedaGeneral)
+                                    {
+                                        var fecha = item.Archivos.Fecha == DateTime.Parse("1900/01/01") ? "" : item.Archivos.Fecha.ToString("dd/MM/yy");
+                                        <p>
+                                            -
+                                            <a href="/Oportunidades/Edicion?Id=@item.Oportunidades.Id">@item.Oportunidades.Nombre</a> 
+                                            <a href="/Oportunidades/Edicion?Id=@item.Oportunidades.Id">@item.Oportunidades.Notas</a> |
+                                            <a href="/Archivos/@item.Archivos.Nombre" target="_blank">@item.Archivos.Nombre - @fecha</a> |
+                                            <a href="/Oportunidades/Edicion?Id=@item.Oportunidades.Id">@item.Usuarios.Nombre</a> |
+                                            <a href="/Oportunidades/Edicion?Id=@item.Oportunidades.Id"><strong>@item.Empresas.Nombre</strong></a>
+                                        </p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-warning">Ningún dato coincide con su búsqueda</p>
+                                }
+                            }
+                            <br />
+
+                            @if (ViewBag.Empresas != null)
+                            {
+                                if (ViewBag.Empresas.Count > 0)
+                                {
+                                    <p>En Empresas</p>
+                                    foreach (var items in ViewBag.Empresas)
+                                    {
+                                        <p>
+                                            <a href="/Documentos/@items.DocumentosEmpresas.Nombre" target="_blank">@items.DocumentosEmpresas.Nombre - @items.DocumentosEmpresas.Fecha.ToString("dd/MM/yy")</a> | 
+                                            <a href="/Empresas/Editar?Id=@items.DocumentosEmpresas.IdEmpresa"><strong>@items.Empresas.Nombre</strong></a>
+                                        </p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-warning">Ningún dato coincide con su búsqueda en Empresas</p>
+                                }
+                            }
+                            <br />
+
+                            @if (ViewBag.Proveedores != null)
+                            {
+                                if (ViewBag.Proveedores.Count > 0)
+                                {
+                                    <p>En Proveedores</p>
+                                    foreach (var items in ViewBag.Proveedores)
+                                    {
+                                        <p>
+                                            <a href="/Documentos/@items.DocumentosProveedores.Nombre" target="_blank">@items.DocumentosProveedores.Nombre - @items.DocumentosProveedores.Fecha.ToString("dd/MM/yy")</a> | 
+                                            <a href="/Administracion/UsuariosREdicion?IdUsuario=@items.DocumentosProveedores.IdProveedor"><strong>@items.Usuarios.Nombre</strong></a>
+                                        </p>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-warning">Ningún dato coincide con su búsqueda en Proveedores</p>
+                                }
+                            }
+                        </div>
+                    </div>
+                
+                
+                    <input type="hidden" id="encontrado" value="@Html.Raw(ViewBag.Buscado.ToString())" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var seencontro = $('#encontrado').val().toUpperCase();
+    $("p:contains('" + seencontro + "')").css("text-decoration", "underline");
+</script>
